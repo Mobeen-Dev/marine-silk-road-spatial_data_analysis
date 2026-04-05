@@ -1,0 +1,94 @@
+{
+  "Commercial": {
+    "dimensions": [
+      72006,
+      33998
+    ],
+    "total_pixels": 2448059988,
+    "sampled_pixels": 2500000000,
+    "min": 0.0,
+    "max": 62652999.0,
+    "mean": 266481.6036181992,
+    "std": 0.0,
+    "zero_pct": 91.69630868,
+    "nonzero_pct": 8.30369132,
+    "distribution": {
+      "No traffic": 2292407717,
+      "Very low (1-10)": 150452478,
+      "Low (10-100)": 957558,
+      "Medium (100-1K)": 21061,
+      "High (1K-10K)": 129135,
+      "Very high (10K-100K)": 1266577,
+      "Extreme (>100K)": 54765474
+    }
+  },
+  "Global": {
+    "dimensions": [
+      72006,
+      33998
+    ],
+    "total_pixels": 2448059988,
+    "sampled_pixels": 2500000000,
+    "min": 0.0,
+    "max": 65468393.0,
+    "mean": 268134.3503375132,
+    "std": 0.0,
+    "zero_pct": 90.02006132,
+    "nonzero_pct": 9.97993868,
+    "distribution": {
+      "No traffic": 2250501533,
+      "Very low (1-10)": 188365499,
+      "Low (10-100)": 1559783,
+      "Medium (100-1K)": 32960,
+      "High (1K-10K)": 177452,
+      "Very high (10K-100K)": 1673380,
+      "Extreme (>100K)": 57689393
+    }
+  },
+  "Oil & Gas": {
+    "dimensions": [
+      72006,
+      33998
+    ],
+    "total_pixels": 2448059988,
+    "sampled_pixels": 2500000000,
+    "min": 0.0,
+    "max": 1359913.0,
+    "mean": 221.3857883072,
+    "std": 0.0,
+    "zero_pct": 99.93943808,
+    "nonzero_pct": 0.060561920000000005,
+    "distribution": {
+      "No traffic": 2498485952,
+      "Very low (1-10)": 42,
+      "Low (10-100)": 379,
+      "Medium (100-1K)": 3854,
+      "High (1K-10K)": 33319,
+      "Very high (10K-100K)": 390235,
+      "Extreme (>100K)": 1086219
+    }
+  },
+  "Passenger": {
+    "dimensions": [
+      72006,
+      33998
+    ],
+    "total_pixels": 2448059988,
+    "sampled_pixels": 2500000000,
+    "min": 0.0,
+    "max": 112280.0,
+    "mean": 0.0233031224,
+    "std": 8.207452782958084,
+    "zero_pct": 99.6587648,
+    "nonzero_pct": 0.3412352,
+    "distribution": {
+      "No traffic": 2491469120,
+      "Very low (1-10)": 8029995,
+      "Low (10-100)": 448568,
+      "Medium (100-1K)": 46805,
+      "High (1K-10K)": 5162,
+      "Very high (10K-100K)": 346,
+      "Extreme (>100K)": 4
+    }
+  }
+}

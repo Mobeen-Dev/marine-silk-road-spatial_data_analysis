@@ -1,0 +1,1271 @@
+================================================================================
+Q3: GEOSPATIAL TECHNIQUES - TECHNICAL BRIEF
+================================================================================
+
+PROJECT: Global Marine Traffic Pattern Analysis & Visualization
+ANALYST: Spatial Data Analyst & Python Engineer  
+DATE: 2026-04-05
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+This document defines the geospatial techniques required to achieve the three
+core project objectives:
+
+1. Heatmap Generation → Kernel Density Estimation (KDE) with Gaussian kernel
+2. Hotspot Detection → DBSCAN clustering + Getis-Ord Gi* statistic
+3. Marine Highway Extraction → Cost-distance analysis + Morphological path tracing
+
+All techniques selected based on:
+- Suitability for marine traffic data characteristics
+- Scalability to 2.45 billion pixels
+- Industry-standard practices
+- Tool availability in Python ecosystem
+
+PRIMARY approach identified for each objective.
+SECONDARY alternatives provided for fallback.
+
+
+================================================================================
+SECTION 1: HEATMAP GENERATION TECHNIQUES
+================================================================================
+
+1.1 OBJECTIVE DEFINITION
+-------------------------
+Goal: Create continuous density surfaces showing shipping traffic intensity
+across the globe for 3 categories (Commercial, Passenger, Oil & Gas).
+
+Requirements:
+- Visual representation of traffic concentration
+- Smooth gradients (not pixelated)
+- Category-wise comparison capability
+- Multi-scale (global to regional)
+- Publication-quality output
+
+
+1.2 DATA CHARACTERISTICS INFLUENCING CHOICE
+--------------------------------------------
+Input Data Properties:
+- Already gridded (raster format, 0.005° cells)
+- Represents cumulative point density (AIS positions)
+- Extremely sparse (90%+ zeros)
+- High-value outliers (ports: 1M-65M positions)
+- Global extent (~360° × 170°)
+
+Implications:
+✓ Don't need to convert points to density (already density)
+✓ Need smoothing for visual appeal
+✓ Need log transformation for value range
+✓ Need to handle sparse data efficiently
+
+
+1.3 PRIMARY TECHNIQUE: DIRECT RASTER VISUALIZATION WITH GAUSSIAN SMOOTHING
+---------------------------------------------------------------------------
+
+Rationale:
+Data is ALREADY a density raster - no need for traditional KDE.
+We need visualization enhancement, not density estimation.
+
+Method: Gaussian Filter Smoothing
+---------------------------------
+```python
+from scipy.ndimage import gaussian_filter
+import numpy as np
+
+def create_heatmap(raster_data, sigma=2, transform_log=True):
+    """
+    Generate heatmap from density raster
+    
+    Args:
+        raster_data: Input raster (already density values)
+        sigma: Gaussian kernel standard deviation (controls smoothness)
+        transform_log: Apply log transformation for visualization
+    
+    Returns:
+        Smoothed heatmap ready for visualization
+    """
+    # Step 1: Handle NoData
+    data = np.where(raster_data == nodata_value, np.nan, raster_data)
+    
+    # Step 2: Log transform to compress value range
+    if transform_log:
+        data = np.log10(data + 1)  # +1 to handle zeros
+    
+    # Step 3: Apply Gaussian smoothing
+    # Note: Handles NaN values properly
+    smoothed = gaussian_filter(data, sigma=sigma, mode='constant', cval=0)
+    
+    # Step 4: Normalize for visualization (0-1 range)
+    if np.nanmax(smoothed) > 0:
+        normalized = smoothed / np.nanmax(smoothed)
+    else:
+        normalized = smoothed
+    
+    return normalized
+```
+
+Parameters:
+- sigma = 1: Minimal smoothing (preserves detail)
+- sigma = 2: Light smoothing (recommended for 500m resolution)
+- sigma = 5: Moderate smoothing (for global overview)
+- sigma = 10: Heavy smoothing (generalized patterns)
+
+Advantages:
+✓ Fast (O(n) with FFT-based implementation)
+✓ Preserves data fidelity (no information loss)
+✓ Handles NaN/NoData gracefully
+✓ Produces smooth, visually appealing gradients
+✓ Scalable to billions of pixels
+
+Disadvantages:
+✗ Assumes Gaussian distribution of traffic (may not be true)
+✗ Smooths over sharp boundaries (e.g., coastlines)
+✗ Doesn't handle anisotropy (directional patterns)
+
+Implementation Tools:
+- scipy.ndimage.gaussian_filter (CPU)
+- cv2.GaussianBlur (OpenCV - faster for large arrays)
+- dask-image for out-of-core processing
+
+
+Multi-Scale Heatmap Strategy:
+-----------------------------
+```python
+# Global view (100x downsample)
+global_heatmap = create_heatmap(
+    downsample(data, 100), 
+    sigma=5  # Heavier smoothing for overview
+)
+
+# Regional view (10x downsample)
+regional_heatmap = create_heatmap(
+    downsample(data, 10),
+    sigma=2  # Light smoothing for detail
+)
+
+# Full resolution (specific areas)
+detail_heatmap = create_heatmap(
+    data[y1:y2, x1:x2],  # Subset
+    sigma=1  # Minimal smoothing for maximum detail
+)
+```
+
+
+Color Mapping Strategy:
+----------------------
+```python
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+
+# Custom colormap for marine traffic
+colors = ['#000033', '#000080', '#0000FF', '#00FFFF', 
+          '#00FF00', '#FFFF00', '#FF8000', '#FF0000']
+positions = [0, 0.1, 0.3, 0.5, 0.65, 0.8, 0.9, 1.0]
+
+traffic_cmap = LinearSegmentedColormap.from_list(
+    'traffic', list(zip(positions, colors))
+)
+
+# Apply to heatmap
+plt.imshow(heatmap, cmap=traffic_cmap, interpolation='bilinear')
+```
+
+Recommended color schemes:
+- Traffic density: Dark blue → cyan → yellow → red
+- Category comparison: Distinct hues per category
+- Monochrome: White → gray → black (for print)
+
+
+1.4 SECONDARY TECHNIQUE: KERNEL DENSITY ESTIMATION (KDE)
+---------------------------------------------------------
+
+Use Case: If we convert raster to points first
+(e.g., for combining with vector port data)
+
+Method: Gaussian KDE with Adaptive Bandwidth
+--------------------------------------------
+```python
+from scipy.stats import gaussian_kde
+from sklearn.neighbors import KernelDensity
+
+def raster_to_points(raster_data, threshold=100):
+    """Convert raster to point cloud"""
+    y_coords, x_coords = np.where(raster_data > threshold)
+    values = raster_data[y_coords, x_coords]
+    
+    # Weighted points (repeat based on density)
+    points = []
+    for y, x, val in zip(y_coords, x_coords, values):
+        # Sample proportional to density
+        n_points = int(np.log10(val + 1))  # Logarithmic sampling
+        points.extend([[x, y]] * n_points)
+    
+    return np.array(points)
+
+def kde_heatmap(points, grid_shape, bandwidth='scott'):
+    """
+    Generate KDE heatmap from points
+    
+    Args:
+        points: Nx2 array of (x, y) coordinates
+        grid_shape: Output raster dimensions
+        bandwidth: KDE bandwidth (auto or fixed value)
+    """
+    # Fit KDE
+    kde = gaussian_kde(points.T, bw_method=bandwidth)
+    
+    # Generate grid
+    x_grid = np.linspace(0, grid_shape[1], grid_shape[1])
+    y_grid = np.linspace(0, grid_shape[0], grid_shape[0])
+    xx, yy = np.meshgrid(x_grid, y_grid)
+    grid_points = np.vstack([xx.ravel(), yy.ravel()])
+    
+    # Evaluate KDE on grid
+    density = kde(grid_points).reshape(grid_shape)
+    
+    return density
+```
+
+Bandwidth Selection:
+- Scott's rule: bandwidth = n^(-1/(d+4)) × σ (auto-adjust to data)
+- Silverman's rule: Similar to Scott's
+- Fixed bandwidth: Manually set based on feature size
+  - 0.01° (~1km): Detailed port areas
+  - 0.05° (~5km): Shipping lanes
+  - 0.5° (~50km): Regional patterns
+
+Advantages:
+✓ Statistical rigor (proper density estimation)
+✓ Adaptive to data density
+✓ Integrates vector and raster data
+
+Disadvantages:
+✗ Computationally expensive (O(n²) or O(n log n) with tree)
+✗ Requires point conversion (lossy for already-dense data)
+✗ Memory intensive for billions of points
+✗ Slower than direct raster approach
+
+Recommendation: ONLY use if combining with external point datasets (e.g., ports)
+
+
+1.5 ALTERNATIVE TECHNIQUE: HEXAGONAL BINNING
+---------------------------------------------
+
+Use Case: For interactive visualizations (web maps)
+
+Method: H3 Hierarchical Hexagonal Indexing
+------------------------------------------
+```python
+import h3
+import pandas as pd
+
+def create_hex_heatmap(lats, lons, values, resolution=5):
+    """
+    Aggregate data into hexagonal bins
+    
+    Args:
+        lats, lons: Coordinate arrays
+        values: Traffic density values
+        resolution: H3 resolution (0-15, larger = finer)
+    
+    Returns:
+        GeoDataFrame with hexagons and aggregated density
+    """
+    # Convert to H3 indices
+    h3_indices = [h3.geo_to_h3(lat, lon, resolution) 
+                  for lat, lon in zip(lats, lons)]
+    
+    # Aggregate by hexagon
+    df = pd.DataFrame({
+        'hex_id': h3_indices,
+        'density': values
+    })
+    hex_agg = df.groupby('hex_id')['density'].sum()
+    
+    # Convert to GeoDataFrame for visualization
+    geometries = [h3.h3_to_geo_boundary(h, geo_json=True) 
+                  for h in hex_agg.index]
+    
+    return hex_agg, geometries
+```
+
+H3 Resolution Guide:
+- Res 0: ~1,000 km edge length (continental scale)
+- Res 3: ~100 km (regional patterns)
+- Res 5: ~8 km (shipping lanes) ← RECOMMENDED
+- Res 7: ~1.2 km (port areas)
+- Res 10: ~70 m (terminal details)
+
+Advantages:
+✓ No distortion (equal-area cells)
+✓ Hierarchical (multi-scale zoom)
+✓ Web-map compatible (GeoJSON output)
+✓ Efficient for interactive applications
+
+Disadvantages:
+✗ Requires resampling original data
+✗ Not as smooth as continuous heatmap
+✗ Additional dependency (H3 library)
+
+Recommendation: Use for Kepler.gl or interactive dashboards
+
+
+1.6 VISUALIZATION TOOLS COMPARISON
+-----------------------------------
+
+Tool              | Best For               | Output Format | Interactivity
+----------------- | ---------------------- | ------------- | -------------
+Matplotlib        | Static publication maps| PNG, PDF, SVG | No
+Folium            | Web maps               | HTML          | Yes (zoom/pan)
+Plotly            | Interactive dashboards | HTML, PNG     | Yes (hover, zoom)
+Kepler.gl         | Large-scale exploration| HTML          | Yes (advanced)
+GeoPandas+Matplotlib| Cartographic quality | PNG, PDF     | No
+Cartopy           | Projected maps         | PNG, PDF      | No
+
+RECOMMENDED PRIMARY: Folium (flexibility + interactivity)
+RECOMMENDED SECONDARY: Matplotlib + Cartopy (publication quality)
+
+
+1.7 HEATMAP GENERATION - FINAL RECOMMENDATION
+----------------------------------------------
+
+PRIMARY APPROACH:
+Method: Direct raster visualization with Gaussian smoothing
+Tool: scipy.ndimage.gaussian_filter + matplotlib/folium
+Justification:
+- Data already in density format
+- Fast and scalable
+- Preserves data fidelity
+- Simple implementation
+
+WORKFLOW:
+1. Load preprocessed raster (log-transformed, clipped)
+2. Apply Gaussian smoothing (sigma=2 for 500m resolution)
+3. Normalize to 0-1 range
+4. Apply color mapping
+5. Overlay on basemap (coastline, countries)
+6. Export as PNG (static) or HTML (interactive via Folium)
+
+Estimated Processing Time: 2-5 minutes per category
+
+Code Template:
+```python
+import rasterio
+from scipy.ndimage import gaussian_filter
+import folium
+from folium.plugins import HeatMap
+
+# Load and preprocess
+with rasterio.open(raster_path) as src:
+    data = src.read(1, out_shape=(src.height//100, src.width//100))
+    data = np.log10(data + 1)
+    smoothed = gaussian_filter(data, sigma=5)
+
+# Create folium map
+m = folium.Map(location=[0, 0], zoom_start=2, tiles='CartoDB positron')
+
+# Add heatmap layer
+# Convert raster to point cloud for Folium
+heat_data = [[lat, lon, value] for lat, lon, value in generate_points(smoothed)]
+HeatMap(heat_data, radius=15, blur=25).add_to(m)
+
+m.save('heatmap.html')
+```
+
+
+================================================================================
+SECTION 2: HOTSPOT DETECTION TECHNIQUES
+================================================================================
+
+2.1 OBJECTIVE DEFINITION
+-------------------------
+Goal: Identify statistically significant high-density regions (hotspots) in
+each of the 3 categories.
+
+Requirements:
+- Algorithmic objectivity (no manual selection)
+- Statistical significance (not just "high values")
+- Spatial clustering (contiguous regions, not isolated cells)
+- Ranked output (top 10, 20, 50 hotspots)
+- Category-wise comparison
+- Validation against known features (ports, straits)
+
+
+2.2 DATA CHARACTERISTICS
+-------------------------
+Hotspot Patterns Expected:
+- Ports: Point-like clusters (5-20 km diameter)
+- Shipping lanes: Linear corridors (10-50 km wide, 100-10,000 km long)
+- Chokepoints: Narrow concentrations (Suez, Panama, Malacca straits)
+- Oil & Gas: Scattered points (platforms/rigs)
+
+Challenges:
+- Distinguish ports from shipping lanes
+- Handle multi-scale hotspots (local ports vs. global trade routes)
+- Avoid false positives from data artifacts
+
+
+2.3 PRIMARY TECHNIQUE: DBSCAN CLUSTERING + Getis-Ord Gi* STATISTIC
+-------------------------------------------------------------------
+
+Two-Stage Approach:
+Stage 1: DBSCAN to identify spatial clusters
+Stage 2: Getis-Ord Gi* to test statistical significance
+
+STAGE 1: DBSCAN (Density-Based Spatial Clustering)
+--------------------------------------------------
+```python
+from sklearn.cluster import DBSCAN
+import numpy as np
+
+def detect_hotspots_dbscan(raster_data, threshold=1000, eps=0.05, min_samples=10):
+    """
+    Detect hotspot clusters using DBSCAN
+    
+    Args:
+        raster_data: Input density raster
+        threshold: Minimum density to consider (filter before clustering)
+        eps: Maximum distance between samples (in degrees)
+        min_samples: Minimum cluster size
+    
+    Returns:
+        Cluster labels and centroids
+    """
+    # Step 1: Extract high-density points
+    high_density = raster_data > threshold
+    y_coords, x_coords = np.where(high_density)
+    values = raster_data[y_coords, x_coords]
+    
+    # Step 2: Convert to coordinate array
+    points = np.column_stack([x_coords, y_coords])  # Note: x,y order
+    
+    # Step 3: Apply DBSCAN
+    clustering = DBSCAN(eps=eps, min_samples=min_samples, metric='euclidean')
+    labels = clustering.fit_predict(points)
+    
+    # Step 4: Extract cluster statistics
+    unique_labels = set(labels)
+    unique_labels.discard(-1)  # Remove noise label
+    
+    hotspots = []
+    for label in unique_labels:
+        cluster_mask = labels == label
+        cluster_points = points[cluster_mask]
+        cluster_values = values[cluster_mask]
+        
+        hotspot = {
+            'cluster_id': label,
+            'centroid': cluster_points.mean(axis=0),
+            'size': cluster_mask.sum(),
+            'total_density': cluster_values.sum(),
+            'max_density': cluster_values.max(),
+            'mean_density': cluster_values.mean(),
+            'bbox': [cluster_points[:, 0].min(), cluster_points[:, 1].min(),
+                    cluster_points[:, 0].max(), cluster_points[:, 1].max()]
+        }
+        hotspots.append(hotspot)
+    
+    # Sort by total density
+    hotspots.sort(key=lambda x: x['total_density'], reverse=True)
+    
+    return hotspots, labels
+```
+
+Parameter Selection:
+- eps (search radius):
+  - 0.01° (~1 km): Port terminals
+  - 0.05° (~5 km): Port areas ← RECOMMENDED for ports
+  - 0.2° (~20 km): Metropolitan port clusters
+  - 1.0° (~100 km): Regional hotspots
+  
+- min_samples (minimum cluster size):
+  - 5: Small features (individual ports)
+  - 10: Medium features ← RECOMMENDED
+  - 50: Major features only (large port complexes)
+
+Advantages:
+✓ No need to specify number of clusters beforehand
+✓ Handles clusters of arbitrary shape (good for shipping lanes)
+✓ Identifies noise automatically
+✓ Fast (O(n log n) with spatial indexing)
+✓ Well-established algorithm
+
+Disadvantages:
+✗ Sensitive to eps parameter
+✗ Struggles with varying density clusters
+✗ Doesn't quantify statistical significance
+
+
+STAGE 2: Getis-Ord Gi* Statistic (Hot Spot Analysis)
+----------------------------------------------------
+```python
+from scipy.spatial.distance import cdist
+from scipy.stats import norm
+
+def getis_ord_gi_star(raster_data, neighborhood_distance=0.1):
+    """
+    Calculate Getis-Ord Gi* statistic for hotspot significance
+    
+    Args:
+        raster_data: Input density raster
+        neighborhood_distance: Distance for spatial neighbors (degrees)
+    
+    Returns:
+        Gi* z-scores (higher = more significant hotspot)
+    """
+    # Extract non-zero points
+    y_coords, x_coords = np.where(raster_data > 0)
+    values = raster_data[y_coords, x_coords]
+    points = np.column_stack([x_coords, y_coords])
+    
+    # Calculate pairwise distances
+    distances = cdist(points, points, metric='euclidean')
+    
+    # Define spatial weights (binary: within distance = 1, else 0)
+    weights = (distances <= neighborhood_distance).astype(float)
+    np.fill_diagonal(weights, 1)  # Include self
+    
+    # Calculate Gi* statistic for each point
+    n = len(values)
+    mean_val = values.mean()
+    std_val = values.std()
+    
+    gi_star_scores = np.zeros(n)
+    for i in range(n):
+        neighbors = weights[i]
+        sum_neighbors = neighbors.sum()
+        weighted_sum = (neighbors * values).sum()
+        
+        # Gi* formula
+        numerator = weighted_sum - mean_val * sum_neighbors
+        denominator = std_val * np.sqrt((n * sum_neighbors - sum_neighbors**2) / (n - 1))
+        
+        if denominator > 0:
+            gi_star_scores[i] = numerator / denominator
+    
+    # Convert to p-values
+    p_values = 2 * (1 - norm.cdf(np.abs(gi_star_scores)))
+    
+    return gi_star_scores, p_values
+```
+
+Interpretation:
+- Gi* > 1.96: 95% confidence hotspot (p < 0.05)
+- Gi* > 2.58: 99% confidence hotspot (p < 0.01)
+- Gi* > 3.29: 99.9% confidence hotspot (p < 0.001)
+
+Advantages:
+✓ Statistical significance testing
+✓ Identifies both hot and cold spots
+✓ Standard method in GIS (ArcGIS uses this)
+✓ Accounts for spatial autocorrelation
+
+Disadvantages:
+✗ Computationally expensive (O(n²))
+✗ Requires careful parameter selection
+✗ Assumes stationarity (may not hold globally)
+
+
+COMBINED WORKFLOW:
+-----------------
+```python
+# Step 1: DBSCAN for initial clustering
+hotspots, labels = detect_hotspots_dbscan(data, threshold=10000, eps=0.05)
+
+# Step 2: For each cluster, calculate Gi* significance
+significant_hotspots = []
+for hotspot in hotspots:
+    cluster_region = extract_region(data, hotspot['bbox'])
+    gi_star, p_values = getis_ord_gi_star(cluster_region)
+    
+    # Check if significantly hot
+    if np.mean(gi_star) > 1.96:
+        hotspot['significance'] = 'high'
+        hotspot['gi_star_mean'] = np.mean(gi_star)
+        significant_hotspots.append(hotspot)
+
+# Step 3: Rank by combination of density and significance
+for hs in significant_hotspots:
+    hs['score'] = hs['total_density'] * hs['gi_star_mean']
+
+significant_hotspots.sort(key=lambda x: x['score'], reverse=True)
+```
+
+
+2.4 SECONDARY TECHNIQUE: PERCENTILE-BASED THRESHOLDING
+-------------------------------------------------------
+
+Simpler alternative for quick hotspot identification.
+
+Method: Multi-Level Percentile Cutoffs
+--------------------------------------
+```python
+def percentile_hotspots(raster_data, percentiles=[95, 98, 99, 99.5]):
+    """
+    Define hotspots by percentile thresholds
+    
+    Returns:
+        Dictionary of hotspot tiers
+    """
+    valid_data = raster_data[raster_data > 0]
+    
+    hotspot_tiers = {}
+    for p in percentiles:
+        threshold = np.percentile(valid_data, p)
+        hotspot_mask = raster_data >= threshold
+        
+        tier_name = f'top_{100-p}%'
+        hotspot_tiers[tier_name] = {
+            'threshold': threshold,
+            'mask': hotspot_mask,
+            'n_cells': hotspot_mask.sum(),
+            'mean_density': raster_data[hotspot_mask].mean()
+        }
+    
+    return hotspot_tiers
+```
+
+Hotspot Tiers:
+- Top 5% (95th percentile): Major shipping lanes + ports
+- Top 2% (98th percentile): Primary ports + key straits
+- Top 1% (99th percentile): Global megaports
+- Top 0.5% (99.5th percentile): Ultra-high density (anchorages)
+
+Advantages:
+✓ Simple and fast
+✓ No parameter tuning
+✓ Easy to explain
+✓ Good for comparative analysis
+
+Disadvantages:
+✗ No spatial clustering (isolated hot pixels)
+✗ No statistical significance
+✗ Arbitrary cutoffs
+
+Use Case: Quick exploratory analysis, validation of DBSCAN results
+
+
+2.5 ALTERNATIVE TECHNIQUE: LOCAL MORAN'S I
+-------------------------------------------
+
+Method: Local Indicators of Spatial Association (LISA)
+------------------------------------------------------
+```python
+from libpysal.weights import DistanceBand
+from esda.moran import Moran_Local
+
+def lisa_hotspots(points, values, distance_threshold):
+    """
+    Detect hotspots using Local Moran's I
+    
+    Returns:
+        Significant hotspot locations
+    """
+    # Build spatial weights
+    w = DistanceBand(points, threshold=distance_threshold)
+    
+    # Calculate Local Moran's I
+    lisa = Moran_Local(values, w)
+    
+    # Identify significant hotspots (High-High clusters)
+    hotspot_mask = (lisa.q == 1) & (lisa.p_sim < 0.05)
+    
+    return hotspot_mask, lisa
+```
+
+Advantages:
+✓ Detects both hotspots (HH) and coldspots (LL)
+✓ Statistical significance built-in
+✓ Standard in spatial econometrics
+
+Disadvantages:
+✗ Requires PySAL library (additional dependency)
+✗ Slower than DBSCAN
+✗ Less intuitive interpretation
+
+Recommendation: Use if academic rigor required
+
+
+2.6 HOTSPOT VALIDATION STRATEGY
+--------------------------------
+
+Validate detected hotspots against ground truth:
+
+1. World Port Index
+   - Match detected hotspots to known port locations
+   - Calculate precision/recall
+
+2. Known Chokepoints
+   - Suez Canal, Panama Canal, Malacca Strait, etc.
+   - Verify detection
+
+3. Visual Inspection
+   - Overlay on satellite imagery
+   - Check for plausibility
+
+Validation Metrics:
+```python
+def validate_hotspots(detected_hotspots, port_locations, threshold_km=50):
+    """
+    Calculate precision: % of detected hotspots near known ports
+    """
+    matches = 0
+    for hotspot in detected_hotspots:
+        distances = calculate_distances(hotspot['centroid'], port_locations)
+        if distances.min() < threshold_km:
+            matches += 1
+    
+    precision = matches / len(detected_hotspots)
+    return precision
+```
+
+
+2.7 HOTSPOT DETECTION - FINAL RECOMMENDATION
+---------------------------------------------
+
+PRIMARY APPROACH:
+Method: DBSCAN clustering + Getis-Ord Gi* statistical testing
+Parameters:
+- Initial threshold: 10,000 AIS positions (filters to ~1% of data)
+- DBSCAN eps: 0.05° (~5 km)
+- DBSCAN min_samples: 10
+- Gi* neighborhood: 0.1° (~10 km)
+- Significance level: p < 0.05 (Gi* > 1.96)
+
+Output:
+- Ranked list of hotspots per category
+- Cluster geometries (bounding boxes or polygons)
+- Statistical significance scores
+- Metadata (size, density, centroid coordinates)
+
+Estimated Processing Time: 10-30 minutes per category
+
+SECONDARY APPROACH:
+Method: Percentile thresholding (99th percentile)
+Use: Quick validation and exploratory analysis
+
+
+================================================================================
+SECTION 3: MARINE HIGHWAY EXTRACTION TECHNIQUES
+================================================================================
+
+3.1 OBJECTIVE DEFINITION
+-------------------------
+Goal: Extract major shipping routes (corridors) from density data.
+
+Requirements:
+- Linear features (not point clusters)
+- End-to-end connectivity (port to port)
+- Width estimation (lane width)
+- Directional flow (if possible)
+- Hierarchical (major vs. minor routes)
+
+
+3.2 PRIMARY TECHNIQUE: MORPHOLOGICAL PATH EXTRACTION + COST-DISTANCE ANALYSIS
+------------------------------------------------------------------------------
+
+Multi-Step Approach:
+
+STEP 1: Skeletonization (Extract Centerlines)
+---------------------------------------------
+```python
+from skimage.morphology import skeletonize, medial_axis
+from scipy.ndimage import binary_dilation
+
+def extract_route_skeletons(density_raster, threshold=1000):
+    """
+    Extract route centerlines using morphological skeletonization
+    
+    Args:
+        density_raster: Traffic density raster
+        threshold: Minimum density for route identification
+    
+    Returns:
+        Binary skeleton image (1 = route, 0 = no route)
+    """
+    # Step 1: Threshold to binary
+    route_mask = density_raster > threshold
+    
+    # Step 2: Fill small gaps (ships don't transmit constantly)
+    filled = binary_dilation(route_mask, iterations=3)
+    
+    # Step 3: Skeletonize to extract centerlines
+    skeleton = skeletonize(filled)
+    
+    # Alternative: Medial axis (provides distance transform)
+    skeleton_ma, distance = medial_axis(filled, return_distance=True)
+    
+    # Distance = route width at each point
+    route_widths = distance * skeleton_ma
+    
+    return skeleton, route_widths
+```
+
+Advantages:
+✓ Extracts centerlines from wide corridors
+✓ Preserves connectivity
+✓ Provides width estimation
+✓ Fast morphological operations
+
+Disadvantages:
+✗ Sensitive to threshold selection
+✗ Creates spurious branches
+✗ Doesn't respect route directionality
+
+
+STEP 2: Least-Cost Path Analysis (Port-to-Port Routes)
+------------------------------------------------------
+```python
+from skimage.graph import route_through_array
+
+def extract_route_by_least_cost(density_raster, start_port, end_port):
+    """
+    Find optimal route between two ports using cost-distance
+    
+    Args:
+        density_raster: Traffic density (higher = lower cost)
+        start_port: (x, y) coordinate
+        end_port: (x, y) coordinate
+    
+    Returns:
+        Optimal path coordinates
+    """
+    # Step 1: Invert density to cost (high density = low cost)
+    max_density = density_raster.max()
+    cost_surface = max_density - density_raster
+    cost_surface[cost_surface < 0] = max_density  # Penalty for zero traffic
+    
+    # Step 2: Find least-cost path
+    path, cost = route_through_array(
+        cost_surface,
+        start=start_port,
+        end=end_port,
+        fully_connected=True  # 8-neighbor connectivity
+    )
+    
+    path = np.array(path)
+    return path, cost
+```
+
+Use Case:
+- If port locations known (World Port Index)
+- Calculate routes between major port pairs
+- Validate against detected corridors
+
+Advantages:
+✓ Follows actual traffic patterns
+✓ Connects known endpoints
+✓ Accounts for obstacles (land masses)
+
+Disadvantages:
+✗ Requires port database
+✗ Computationally expensive for many pairs
+✗ May miss routes not connecting major ports
+
+
+STEP 3: Ridge Detection (Alternative to Skeletonization)
+--------------------------------------------------------
+```python
+from skimage.filters import meijering, sato, frangi, hessian
+
+def detect_routes_ridge(density_raster):
+    """
+    Detect linear features using ridge detection filters
+    
+    Returns:
+        Ridge-enhanced image highlighting linear routes
+    """
+    # Log transform for better contrast
+    log_density = np.log10(density_raster + 1)
+    
+    # Apply ridge detection (Frangi or Hessian-based)
+    ridges = frangi(log_density, 
+                   sigmas=range(1, 10, 2),  # Multi-scale
+                   black_ridges=False)  # White ridges (high values)
+    
+    return ridges
+```
+
+Ridge Filter Comparison:
+- Meijering: Good for centerlines
+- Sato: Good for vessel-like structures
+- Frangi: Best for shipping lanes (tubular structures)
+- Hessian: Fast but less specific
+
+Recommended: Frangi filter for shipping lanes
+
+
+STEP 4: Vectorization (Convert to Line Features)
+------------------------------------------------
+```python
+import cv2
+from shapely.geometry import LineString, MultiLineString
+
+def vectorize_routes(skeleton_image):
+    """
+    Convert binary skeleton to vector lines
+    
+    Returns:
+        List of LineString geometries
+    """
+    # Find contours/lines in skeleton
+    contours, hierarchy = cv2.findContours(
+        skeleton_image.astype(np.uint8),
+        cv2.RETR_TREE,
+        cv2.CHAIN_APPROX_SIMPLE
+    )
+    
+    # Convert to LineStrings
+    routes = []
+    for contour in contours:
+        if len(contour) > 5:  # Minimum length threshold
+            coords = contour.squeeze()
+            if coords.ndim == 2:  # Valid line
+                routes.append(LineString(coords))
+    
+    return routes
+```
+
+Post-Processing:
+- Remove short segments (<50 km)
+- Simplify lines (Douglas-Peucker algorithm)
+- Merge nearby parallel lines
+- Label routes (assign names based on endpoints)
+
+
+COMBINED WORKFLOW:
+-----------------
+```python
+def extract_marine_highways(density_raster, ports_gdf=None):
+    """
+    Complete marine highway extraction pipeline
+    """
+    # Method 1: Morphological skeletonization
+    skeleton, widths = extract_route_skeletons(density_raster, threshold=5000)
+    
+    # Method 2: If ports available, calculate least-cost paths
+    if ports_gdf is not None:
+        major_ports = ports_gdf.nlargest(20, 'traffic_volume')
+        port_pairs = generate_port_pairs(major_ports)
+        
+        lcps = []
+        for start, end in port_pairs:
+            path, cost = extract_route_by_least_cost(density_raster, start, end)
+            lcps.append(path)
+    
+    # Method 3: Ridge detection for validation
+    ridges = detect_routes_ridge(density_raster)
+    
+    # Combine methods (intersection of skeleton and ridges)
+    combined = skeleton & (ridges > 0.5)
+    
+    # Vectorize
+    route_lines = vectorize_routes(combined)
+    
+    # Classify by hierarchy
+    for route in route_lines:
+        length = route.length
+        avg_traffic = calculate_avg_traffic(route, density_raster)
+        
+        if avg_traffic > 100000 and length > 1000:
+            route.category = 'Primary'
+        elif avg_traffic > 10000:
+            route.category = 'Secondary'
+        else:
+            route.category = 'Tertiary'
+    
+    return route_lines
+```
+
+
+3.3 SECONDARY TECHNIQUE: GRAPH-BASED ROUTE EXTRACTION
+------------------------------------------------------
+
+Method: Treat high-density pixels as graph nodes
+------------------------------------------------
+```python
+import networkx as nx
+
+def build_traffic_network(density_raster, threshold=5000):
+    """
+    Build graph network from high-density pixels
+    
+    Returns:
+        NetworkX graph with weighted edges
+    """
+    # Extract high-density points
+    high_density = density_raster > threshold
+    y_coords, x_coords = np.where(high_density)
+    
+    # Build graph
+    G = nx.Graph()
+    
+    # Add nodes
+    for i, (y, x) in enumerate(zip(y_coords, x_coords)):
+        G.add_node(i, pos=(x, y), density=density_raster[y, x])
+    
+    # Add edges (connect neighbors within distance)
+    from scipy.spatial import cKDTree
+    points = np.column_stack([x_coords, y_coords])
+    tree = cKDTree(points)
+    
+    for i, point in enumerate(points):
+        neighbors = tree.query_ball_point(point, r=5)  # 5 pixel radius
+        for j in neighbors:
+            if i != j:
+                distance = np.linalg.norm(points[i] - points[j])
+                weight = 1.0 / (density_raster[y_coords[i], x_coords[i]] + 
+                               density_raster[y_coords[j], x_coords[j]])
+                G.add_edge(i, j, weight=weight, distance=distance)
+    
+    return G
+
+def extract_main_routes(G, n_routes=20):
+    """
+    Extract main routes as shortest paths between high-degree nodes
+    """
+    # Find hub nodes (high betweenness centrality)
+    centrality = nx.betweenness_centrality(G, weight='weight')
+    hubs = sorted(centrality, key=centrality.get, reverse=True)[:50]
+    
+    # Calculate shortest paths between hub pairs
+    routes = []
+    for i in range(len(hubs)-1):
+        for j in range(i+1, len(hubs)):
+            try:
+                path = nx.shortest_path(G, hubs[i], hubs[j], weight='weight')
+                routes.append(path)
+            except nx.NetworkXNoPath:
+                continue
+    
+    return routes
+```
+
+Advantages:
+✓ Respects network topology
+✓ Finds optimal paths
+✓ Can calculate network metrics (betweenness, centrality)
+
+Disadvantages:
+✗ Extremely memory intensive (millions of nodes)
+✗ Slow for global analysis
+✗ Requires graph algorithms expertise
+
+Recommendation: Use for regional analysis only
+
+
+3.4 VALIDATION & CLASSIFICATION
+--------------------------------
+
+Route Classification Criteria:
+------------------------------
+1. Traffic Volume
+   - Primary: >100,000 avg AIS positions
+   - Secondary: 10,000-100,000
+   - Tertiary: <10,000
+
+2. Length
+   - Long-haul: >5,000 km (intercontinental)
+   - Regional: 500-5,000 km
+   - Short-haul: <500 km
+
+3. Connectivity
+   - Hub-to-hub: Connects major ports
+   - Feeder: Connects minor to major
+   - Coastal: Along coastlines
+
+Expected Major Routes:
+- Asia-North America (Trans-Pacific)
+- Europe-North America (Trans-Atlantic)
+- Asia-Europe (via Suez)
+- Intra-Asia (China-Japan-SE Asia)
+
+
+3.5 MARINE HIGHWAY EXTRACTION - FINAL RECOMMENDATION
+-----------------------------------------------------
+
+PRIMARY APPROACH:
+Method: Morphological skeletonization + Ridge detection (Frangi filter)
+Post-Processing: Vectorization + Douglas-Peucker simplification
+
+Workflow:
+1. Threshold density raster (>5,000 positions)
+2. Apply binary dilation to fill gaps
+3. Skeletonize to extract centerlines
+4. Apply Frangi ridge filter for validation
+5. Combine skeleton & ridges (intersection)
+6. Vectorize to LineStrings
+7. Classify by traffic volume and length
+8. Export as GeoJSON or Shapefile
+
+Tools:
+- scikit-image (morphology, ridge detection)
+- OpenCV (vectorization)
+- Shapely (geometry operations)
+- GeoPandas (export)
+
+Estimated Processing Time: 30-60 minutes for global dataset
+
+SECONDARY APPROACH:
+Method: Least-cost path between known ports
+Requirement: World Port Index dataset
+Use: Validation and gap-filling
+
+
+================================================================================
+SECTION 4: TOOL STACK RECOMMENDATION
+================================================================================
+
+4.1 PYTHON LIBRARIES REQUIRED
+------------------------------
+
+Core Geospatial:
+- rasterio: Raster I/O
+- geopandas: Vector data
+- shapely: Geometry operations
+- pyproj: Coordinate transformations
+
+Analysis & Processing:
+- numpy: Array operations
+- scipy: Signal processing, statistics
+- scikit-image: Morphological operations, filters
+- scikit-learn: DBSCAN clustering
+- opencv-python: Contour detection
+
+Visualization:
+- matplotlib: Static maps
+- folium: Interactive web maps
+- plotly: Interactive dashboards
+- cartopy: Projected maps
+
+Optional:
+- h3: Hexagonal binning
+- libpysal, esda: Spatial statistics
+- networkx: Graph analysis
+
+
+4.2 INSTALLATION
+----------------
+```bash
+pip install rasterio geopandas shapely pyproj
+pip install numpy scipy scikit-image scikit-learn opencv-python
+pip install matplotlib folium plotly cartopy
+pip install h3 libpysal esda networkx  # Optional
+```
+
+
+4.3 COMPUTE REQUIREMENTS
+-------------------------
+
+Minimum:
+- RAM: 16 GB
+- CPU: 4 cores
+- Storage: 50 GB (for data + outputs)
+- OS: Windows/Linux/Mac
+
+Recommended:
+- RAM: 32 GB (for full-resolution processing)
+- CPU: 8+ cores (parallel processing)
+- GPU: Optional (for deep learning approaches)
+- Storage: 100 GB SSD
+
+
+================================================================================
+SECTION 5: SUMMARY & DECISION MATRIX
+================================================================================
+
+5.1 TECHNIQUE SELECTION SUMMARY
+--------------------------------
+
+Objective          | PRIMARY Technique               | SECONDARY Alternative
+------------------ | ------------------------------- | ---------------------
+Heatmap Generation | Gaussian smoothing + Folium     | KDE (if point data)
+Hotspot Detection  | DBSCAN + Getis-Ord Gi*          | Percentile threshold
+Marine Highways    | Skeletonization + Frangi filter | Least-cost paths
+
+
+5.2 JUSTIFICATION MATRIX
+-------------------------
+
+Criterion          | Heatmap    | Hotspot      | Highway
+------------------ | ---------- | ------------ | --------
+Data Suitability   | Excellent  | Excellent    | Good
+Scalability        | Excellent  | Good         | Fair
+Statistical Rigor  | Good       | Excellent    | Fair
+Tool Availability  | Excellent  | Good         | Good
+Implementation     | Simple     | Moderate     | Complex
+Processing Time    | Fast       | Moderate     | Slow
+Output Quality     | Excellent  | Excellent    | Good
+
+
+5.3 FINAL WORKFLOW OVERVIEW
+----------------------------
+
+Phase 1: Heatmap Generation (2-3 hours)
+- Load preprocessed rasters
+- Apply Gaussian smoothing
+- Create multi-scale versions
+- Generate static + interactive maps
+- Export visualizations
+
+Phase 2: Hotspot Detection (3-4 hours)
+- Apply threshold filter
+- Run DBSCAN clustering
+- Calculate Getis-Ord Gi* statistics
+- Rank and export hotspots
+- Validate against known features
+
+Phase 3: Marine Highway Extraction (4-6 hours)
+- Skeletonize high-density corridors
+- Apply ridge detection
+- Vectorize routes
+- Classify by hierarchy
+- Export as vector layers
+
+Total Estimated Time: 10-15 hours for complete analysis
+
+
+5.4 CONFIDENCE ASSESSMENT
+--------------------------
+
+Heatmap Generation: ⭐⭐⭐⭐⭐ (Very High Confidence)
+- Well-established techniques
+- Data already in correct format
+- Proven tools available
+
+Hotspot Detection: ⭐⭐⭐⭐⭐ (Very High Confidence)
+- Standard GIS methodology
+- Statistical rigor
+- Validation possible
+
+Marine Highway Extraction: ⭐⭐⭐⭐☆ (High Confidence)
+- More experimental approach
+- May require parameter tuning
+- Post-processing needed
+- Results expected but need validation
+
+
+================================================================================
+CODE ARTIFACTS & REFERENCES
+================================================================================
+
+All techniques described with executable code snippets.
+Methods selected from peer-reviewed literature and industry practice.
+
+Primary References:
+[1] Getis, A. & Ord, J.K. (1992) "The Analysis of Spatial Association"
+[2] Ester, M. et al. (1996) "DBSCAN: Density-Based Clustering"
+[3] Frangi, A.F. et al. (1998) "Multiscale vessel enhancement filtering"
+[4] Zhang, T.Y. & Suen, C.Y. (1984) "A fast parallel algorithm for thinning"
+
+Tool Documentation:
+- Scikit-image: scikit-image.org
+- Rasterio: rasterio.readthedocs.io
+- GeoPandas: geopandas.org
+- Folium: python-visualization.github.io/folium
+
+
+================================================================================
+END OF Q3 TECHNICAL BRIEF
+================================================================================

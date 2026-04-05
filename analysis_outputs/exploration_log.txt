@@ -1,0 +1,257 @@
+=== MARINE TRAFFIC DATA EXPLORATION LOG ===
+
+================================================================================
+STEP 1: EXPLORING JSON DATA
+================================================================================
+
+✓ Found: dataset\Global Shipping Traffic Density.json
+File size: 68.06 KB
+
+JSON Structure:
+  Type: <class 'dict'>
+  Keys: ['dataset_id', 'name', 'dataset_unique_id', 'archive_nid', 'status', 'created_on', 'created_by', 'created_email', 'modified_on', 'modified_by', 'version_number', 'last_updated_date', 'app_url', 'app_legacy_url', 'priority_tags', 'high_priority_tags', 'identification', 'keywords', 'constraints', 'data_quality', 'geographical_extent', 'temporal_extent', 'temporal_resolution', 'spatial_resolution', 'reference_system', 'lineage', 'maintenance_information', 'subscription', 'resources', 'indicators', 'citation']
+
+Detailed Content:
+
+  [dataset_id]:
+    Type: <class 'str'>
+    Value: f173cf91-b4c7-eb11-bacc-000d3a5a1a58
+
+  [name]:
+    Type: <class 'str'>
+    Value: Global Shipping Traffic Density
+
+  [dataset_unique_id]:
+    Type: <class 'str'>
+    Value: 0037580
+
+  [archive_nid]:
+    Type: <class 'str'>
+    Value: 1236726
+
+  [status]:
+    Type: <class 'str'>
+    Value: PUBLISHED
+
+  [created_on]:
+    Type: <class 'str'>
+    Value: 2021-03-25T23:44:54
+
+  [created_by]:
+    Type: <class 'str'>
+    Value: # SRV-DDH2-PRD
+
+  [created_email]:
+    Type: <class 'str'>
+    Value: srv_ddh2_prd@worldbankgroup.org
+
+  [modified_on]:
+    Type: <class 'str'>
+    Value: 2023-01-18T20:43:24Z
+
+  [modified_by]:
+    Type: <class 'str'>
+    Value: # SRV-DDH2-PRD
+
+  [version_number]:
+    Type: <class 'str'>
+    Value: 5
+
+  [last_updated_date]:
+    Type: <class 'str'>
+    Value: 2021-05-03T00:00:00
+
+  [app_url]:
+    Type: <class 'NoneType'>
+
+  [app_legacy_url]:
+    Type: <class 'str'>
+    Value: https://datacatalog.worldbank.org/dataset/global-shipping-traffic-density
+
+  [priority_tags]:
+    Type: <class 'NoneType'>
+
+  [high_priority_tags]:
+    Type: <class 'NoneType'>
+
+  [identification]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'title', 'urltitle', 'subtitle', 'description', 'acronym', 'topics', 'practice', 'work_unit', 'working_unit_vpu', 'wb_project_reference', 'grant_number', 'parent_dataset', 'collection_id', 'collection_code', 'translated_title', 'point_of_contact', 'dates', 'language_supported', 'citation', 'doi_url']
+
+  [keywords]:
+    Type: <class 'list'>
+    Length: 6
+    First item: {'id': '4f55de11-b5c7-eb11-bacc-000d3a5a1a58', 'name': 'offshore wind'}
+
+  [constraints]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'legal', 'security', 'license']
+
+  [data_quality]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'data_notes']
+
+  [geographical_extent]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'description', 'coverage', 'geo_json', 'bounding_box', 'vertical_extent']
+
+  [temporal_extent]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'end_date', 'start_date', 'description', 'duration', 'coverage']
+
+  [temporal_resolution]:
+    Type: <class 'dict'>
+    Sub-keys: ['periodicity']
+
+  [spatial_resolution]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'granularity', 'granularity_list', 'pixel_resolution']
+
+  [reference_system]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'reference_id', 'version', 'map_projection']
+
+  [lineage]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'source_type', 'source_type_list', 'source', 'source_reference', 'statistical_concept_and_methodology', 'base_period', 'aggregation_method', 'description', 'related_links_and_publications', 'publication_place', 'funding_name_abbreviation_role', 'study_type', 'deviations_from_sample_design', 'other_acknowledgements', 'harvest_system', 'harvest_system_reference']
+
+  [maintenance_information]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'update_frequency', 'update_schedule', 'maintenance_note', 'embargo_date', 'embargo_comments', 'version_description', 'version_production_date', 'version_producer', 'version_notes', 'version_history']
+
+  [subscription]:
+    Type: <class 'dict'>
+    Sub-keys: ['id', 'subscription_date_from', 'subscription_date_to']
+
+  [resources]:
+    Type: <class 'list'>
+    Length: 8
+    First item: {'resource_id': '2141bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'name': 'Global Ship Density', 'resource_unique_id': 'DR0045406', 'archive_nid': '1237141', 'last_updated': '5/3/2021 12:00:00 AM', 'last_updated_date': '2021-05-03T00:00:00', 'first_published_date': None, 'download_count': None, 'dataset_id': 'f173cf91-b4c7-eb11-bacc-000d3a5a1a58', 'dataset': {'id': 'f173cf91-b4c7-eb11-bacc-000d3a5a1a58', 'name': 'Global Shipping Traffic Density', 'unique_id': '0037580'}, 'identification': {'id': '2341bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'title': 'Global Ship Density', 'type': 'Dataset', 'description': 'This dataset is based on all observed ship movement from 2015-2020, at 500 m resolution.\r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that are considered for the density layer.\r\n', 'status': 'Active', 'work_unit': None, 'citation': None, 'keywords': None, 'language_supported': None, 'sort_order': None}, 'constraints': {'id': '2441bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'legal': {'access_constraints': None, 'use_constraints': None, 'other_constraints': None, 'disclaimer': None, 'copyright': None}, 'security': {'classification': 'Public', 'exception': None, 'user_note': None}, 'license': {'license_id': None, 'custom_license_information': None, 'license_reference': None, 'exception': None}}, 'distribution': {'id': '2541bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'format': 'zip', 'url': 'https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045406/shipdensity_global.zip', 'ext_url': None, 'website_url': None, 'distribution_description': None, 'distribution_format': 'ZIP', 'distribution_size': '510.1 MB', 'is_directory': None, 'is_large_dataset': None, 'file_name': 'shipdensity_global.zip', 'preview_api_url': None}, 'geographical_extent': {'id': '2641bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'description': None, 'coverage': None, 'geo_json': None, 'bounding_box': {'west_longitude': None, 'east_longitude': None, 'north_latitude': None, 'south_latitude': None}}, 'lineage': {'id': '2741bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'harvest_system': None, 'harvest_system_reference': 'https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/shipdensity_global.zip'}, 'maintenance_information': {'id': '2841bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'update_frequency': None, 'maintenance_note': None, 'version': None, 'version_date': None, 'version_notes': None, 'version_description': None, 'version_producer': 'Sangamesh Naidu Mullaguru'}, 'reference_system': {'id': '2941bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'reference_id': None, 'version': None, 'map_projection': None}, 'spatial_resolution': {'id': '2a41bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'granularity': None, 'pixel_resolution': None}, 'temporal_extent': {'id': '2b41bdeb-b4c7-eb11-bacc-000d3a5a1a58', 'end_date': None, 'start_date': None, 'description': None, 'duration': None, 'coverage': None}, 'temporal_resolution': {'periodicity': None}}
+
+  [indicators]:
+    Type: <class 'list'>
+    Length: 0
+
+  [citation]:
+    Type: <class 'list'>
+    Length: 0
+
+✓ Saved formatted JSON to: analysis_outputs\json_formatted.json
+
+================================================================================
+STEP 2: ANALYZING GEOTIFF RASTER FILES
+================================================================================
+
+============================================================
+CATEGORY: COMMERCIAL
+============================================================
+✓ File exists: dataset\shipdensity_commercial_\ShipDensity_Commercial1.tif
+  File size: 9363.31 MB
+
+GEOSPATIAL METADATA:
+  Driver: GTiff
+  Dimensions: 72006 x 33998 pixels
+  Number of bands: 1
+  Data type: int32
+  CRS (Coordinate Reference System): EPSG:4326
+  Bounds: BoundingBox(left=-180.015311275, bottom=-84.98735206299992, right=180.01468872500004, top=85.00264793700009)
+  Transform: | 0.01, 0.00,-180.02|
+| 0.00,-0.01, 85.00|
+| 0.00, 0.00, 1.00|
+
+SPATIAL RESOLUTION:
+  Pixel width: 0.005 degrees
+  Pixel height: 0.005 degrees
+  Expected ~500m x 500m at equator: 0.005000° ≈ 0.005°
+✗ Error reading raster: Unable to allocate 9.12 GiB for an array with shape (1, 33998, 72006) and data type int32
+
+============================================================
+CATEGORY: GLOBAL
+============================================================
+✓ File exists: dataset\shipdensity_global\shipdensity_global.tif
+  File size: 9363.31 MB
+
+GEOSPATIAL METADATA:
+  Driver: GTiff
+  Dimensions: 72006 x 33998 pixels
+  Number of bands: 1
+  Data type: int32
+  CRS (Coordinate Reference System): EPSG:4326
+  Bounds: BoundingBox(left=-180.015311275, bottom=-84.98735206299992, right=180.01468872500004, top=85.00264793700009)
+  Transform: | 0.01, 0.00,-180.02|
+| 0.00,-0.01, 85.00|
+| 0.00, 0.00, 1.00|
+
+SPATIAL RESOLUTION:
+  Pixel width: 0.005 degrees
+  Pixel height: 0.005 degrees
+  Expected ~500m x 500m at equator: 0.005000° ≈ 0.005°
+✗ Error reading raster: Unable to allocate 9.12 GiB for an array with shape (1, 33998, 72006) and data type int32
+
+============================================================
+CATEGORY: OIL_GAS
+============================================================
+✓ File exists: dataset\ShipDensity_OilGas\ShipDensity_OilGas1.tif
+  File size: 9363.31 MB
+
+GEOSPATIAL METADATA:
+  Driver: GTiff
+  Dimensions: 72006 x 33998 pixels
+  Number of bands: 1
+  Data type: int32
+  CRS (Coordinate Reference System): EPSG:4326
+  Bounds: BoundingBox(left=-180.015311275, bottom=-84.98735206299995, right=180.01468872500004, top=85.00264793700006)
+  Transform: | 0.01, 0.00,-180.02|
+| 0.00,-0.01, 85.00|
+| 0.00, 0.00, 1.00|
+
+SPATIAL RESOLUTION:
+  Pixel width: 0.005 degrees
+  Pixel height: 0.005 degrees
+  Expected ~500m x 500m at equator: 0.005000° ≈ 0.005°
+✗ Error reading raster: Unable to allocate 9.12 GiB for an array with shape (1, 33998, 72006) and data type int32
+
+============================================================
+CATEGORY: PASSENGER
+============================================================
+✓ File exists: dataset\ShipDensity_Passenger\ShipDensity_Passenger1.tif
+  File size: 9363.31 MB
+
+GEOSPATIAL METADATA:
+  Driver: GTiff
+  Dimensions: 72006 x 33998 pixels
+  Number of bands: 1
+  Data type: int32
+  CRS (Coordinate Reference System): EPSG:4326
+  Bounds: BoundingBox(left=-180.015311275, bottom=-84.98735206299995, right=180.01468872500004, top=85.00264793700006)
+  Transform: | 0.01, 0.00,-180.02|
+| 0.00,-0.01, 85.00|
+| 0.00, 0.00, 1.00|
+
+SPATIAL RESOLUTION:
+  Pixel width: 0.005 degrees
+  Pixel height: 0.005 degrees
+  Expected ~500m x 500m at equator: 0.005000° ≈ 0.005°
+✗ Error reading raster: Unable to allocate 9.12 GiB for an array with shape (1, 33998, 72006) and data type int32
+
+================================================================================
+STEP 3: CROSS-CATEGORY COMPARISON
+================================================================================
+
+================================================================================
+STEP 4: DATA QUALITY ASSESSMENT
+================================================================================
+
+KEY FINDINGS:
+1. Data Format: GeoTIFF raster files (0.005° resolution ≈ 500m)
+2. Categories Available: Commercial, Global, Oil & Gas, Passenger
+3. Temporal Coverage: Jan 2015 - Feb 2021 (6+ years)
+4. Data Source: AIS (Automatic Identification System) positions
+5. Values Represent: Total AIS position reports per grid cell
+
+================================================================================
+EXPLORATION COMPLETE
+================================================================================
+
+All outputs saved to: C:\DRIVE_D\PythonProject\marine-silk-road\analysis_outputs
+Log file: C:\DRIVE_D\PythonProject\marine-silk-road\analysis_outputs\exploration_log.txt
