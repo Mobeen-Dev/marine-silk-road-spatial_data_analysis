@@ -1,0 +1,2297 @@
+{
+  "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+  "name": "Global Shipping Traffic Density",
+  "dataset_unique_id": "0037580",
+  "archive_nid": "1236726",
+  "status": "PUBLISHED",
+  "created_on": "2021-03-25T23:44:54",
+  "created_by": "# SRV-DDH2-PRD",
+  "created_email": "srv_ddh2_prd@worldbankgroup.org",
+  "modified_on": "2023-01-18T20:43:24Z",
+  "modified_by": "# SRV-DDH2-PRD",
+  "version_number": "5",
+  "last_updated_date": "2021-05-03T00:00:00",
+  "app_url": null,
+  "app_legacy_url": "https://datacatalog.worldbank.org/dataset/global-shipping-traffic-density",
+  "priority_tags": null,
+  "high_priority_tags": null,
+  "identification": {
+    "id": "f273cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "title": "Global Shipping Traffic Density",
+    "urltitle": "global_shipping_traffic_density",
+    "subtitle": null,
+    "description": "<p>This data was obtained through a partnership with IMF, as part of IMF's World Seaborne Trade Monitoring System (<a href=\"https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.imf.org%2Fen%2FPublications%2FWP%2FIssues%2F2020%2F05%2F14%2FWorld-Seaborne-Trade-in-Real-Time-A-Proof-of-Concept-for-Building-AIS-based-Nowcasts-from-49393&amp;data=04%7C01%7Ccivanescu%40worldbank.org%7C90e062f075164b1daa1608d8ef0d1868%7C31a2fec0266b4c67b56e2796d8f59c36%7C0%7C0%7C637522186846352424%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=uLhKyHf8HClHW2U9rurnKsayAHwwiZbjsfH95pmp%2FRw%3D&amp;reserved=0\" rel=\"noopener noreferrer\" target=\"_blank\">Cerdeiro, Komaromi, Liu and Saeed, 2020)</a>. The data analysis was supported by the World Bank?s <a href=\"https://esmap.org/\" rel=\"noopener noreferrer\" target=\"_blank\">ESMAP</a> and <a href=\"https://www.worldbank.org/en/programs/problue\" rel=\"noopener noreferrer\" target=\"_blank\">PROBLUE</a> programs.&nbsp;</p><p>The dataset contains 6 density layers, with vessel types aggregated to suit the needs of the WBG Offshore Wind Development Program:</p><p>1) Commercial ships</p><p>2) Fishing ships</p><p>3) Oil &amp; Gas [note: this is just platforms, rigs, and FPSOs]</p><p>4) Passenger ships</p><p>5) Leisure vessels</p><p>6) GLOBAL ship density layers of all ship categories combined</p><p>The raster layers were created using IMF's analysis of hourly AIS positions received between Jan-2015 and Feb-2021 and represent the <strong>total number of AIS positions</strong> that have been reported by ships in each grid cell with dimensions of 0.005 degree by 0.005 degree (approximately a 500m x 500m grid at the Equator).</p><p>The AIS positions may have been transmitted by both <a href=\"https://www.navcen.uscg.gov/?pageName=AISMessagesA\" rel=\"noopener noreferrer\" target=\"_blank\">moving</a> and <a href=\"https://www.navcen.uscg.gov/?pageName=AISMessagesAStatic\" rel=\"noopener noreferrer\" target=\"_blank\">stationary </a>ships within each grid cell, therefore the density is analogous to the general intensity of shipping activity.</p>",
+    "acronym": null,
+    "topics": [
+      {
+        "id": "f373cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Trade"
+      },
+      {
+        "id": "f473cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Transport"
+      }
+    ],
+    "practice": null,
+    "work_unit": null,
+    "working_unit_vpu": null,
+    "wb_project_reference": null,
+    "grant_number": null,
+    "parent_dataset": null,
+    "collection_id": [
+      "UKRAINE"
+    ],
+    "collection_code": [
+      "UKRAINE"
+    ],
+    "translated_title": null,
+    "point_of_contact": [
+      {
+        "id": "f573cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Mark Thomas Leybourne",
+        "role": {
+          "code": "TEAMLEAD",
+          "name": "Team Lead"
+        },
+        "email": "mleybourne@worldbank.org",
+        "upi": "000559750",
+        "externally_visible_email": false
+      },
+      {
+        "id": "f673cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Clara Ivanescu",
+        "role": {
+          "code": "COLLABORATOR",
+          "name": "Collaborator"
+        },
+        "email": "civanescu@worldbank.org",
+        "upi": "000479623",
+        "externally_visible_email": false
+      },
+      {
+        "id": "f773cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Rachel Linda Fox",
+        "role": {
+          "code": "COLLABORATOR",
+          "name": "Collaborator"
+        },
+        "email": "rfox2@worldbank.org",
+        "upi": "000557396",
+        "externally_visible_email": false
+      }
+    ],
+    "dates": [
+      {
+        "id": "f873cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "date": "5/3/2021 12:00:00 AM",
+        "type": "LAST_UPDATED_DATE"
+      },
+      {
+        "id": "f973cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "date": "3/25/2021 11:44:54 PM",
+        "type": "CREATED_DATE"
+      }
+    ],
+    "language_supported": [
+      {
+        "id": "fa73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "EN",
+        "name": "English",
+        "language_id": "fb3550b0-f4af-ea11-a812-000d3a32896d"
+      }
+    ],
+    "citation": "?Data source: IMF?s World Seaborne Trade monitoring system (Cerdeiro, Komaromi, Liu and Saeed, 2020).? ",
+    "doi_url": null
+  },
+  "keywords": [
+    {
+      "id": "4f55de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "offshore wind"
+    },
+    {
+      "id": "5c55de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "seaborne trade"
+    },
+    {
+      "id": "5255de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "shipping density"
+    },
+    {
+      "id": "5455de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "shipping routes"
+    },
+    {
+      "id": "5a55de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "Trade"
+    },
+    {
+      "id": "5755de11-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "transportation"
+    }
+  ],
+  "constraints": {
+    "id": "fb73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "legal": {
+      "access_constraints": null,
+      "use_constraints": null,
+      "other_constraints": null,
+      "disclaimer": null,
+      "copyright": null
+    },
+    "security": {
+      "classification": "Public",
+      "is_restricted": false,
+      "exception": null,
+      "user_note": null
+    },
+    "license": {
+      "license_id": "Creative Commons Attribution 4.0",
+      "custom_license_information": null,
+      "license_reference": null
+    }
+  },
+  "data_quality": {
+    "id": "fc73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "data_notes": null
+  },
+  "geographical_extent": {
+    "id": "fd73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "description": null,
+    "coverage": [
+      {
+        "id": "fe73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "1W",
+        "name": "World"
+      },
+      {
+        "id": "ff73cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "4E",
+        "name": "East Asia and Pacific"
+      },
+      {
+        "id": "0074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AS",
+        "name": "American Samoa"
+      },
+      {
+        "id": "0174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AU",
+        "name": "Australia"
+      },
+      {
+        "id": "0274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BN",
+        "name": "Brunei Darussalam"
+      },
+      {
+        "id": "0374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KH",
+        "name": "Cambodia"
+      },
+      {
+        "id": "0474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CN",
+        "name": "China"
+      },
+      {
+        "id": "0574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CK",
+        "name": "Cook Islands"
+      },
+      {
+        "id": "0674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "FJ",
+        "name": "Fiji"
+      },
+      {
+        "id": "0774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PF",
+        "name": "French Polynesia"
+      },
+      {
+        "id": "0874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GU",
+        "name": "Guam"
+      },
+      {
+        "id": "0974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "HK",
+        "name": "Hong Kong SAR, China"
+      },
+      {
+        "id": "0a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ID",
+        "name": "Indonesia"
+      },
+      {
+        "id": "0b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "JP",
+        "name": "Japan"
+      },
+      {
+        "id": "0c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KI",
+        "name": "Kiribati"
+      },
+      {
+        "id": "0d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KP",
+        "name": "Korea, Democratic People's Republic of"
+      },
+      {
+        "id": "0e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KR",
+        "name": "Korea, Republic of"
+      },
+      {
+        "id": "0f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LA",
+        "name": "Lao People's Democratic Republic"
+      },
+      {
+        "id": "1074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MO",
+        "name": "Macao SAR, China"
+      },
+      {
+        "id": "1174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MY",
+        "name": "Malaysia"
+      },
+      {
+        "id": "1274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MH",
+        "name": "Marshall Islands"
+      },
+      {
+        "id": "1374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "FM",
+        "name": "Micronesia, Federated States of"
+      },
+      {
+        "id": "1474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MN",
+        "name": "Mongolia"
+      },
+      {
+        "id": "1574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MM",
+        "name": "Myanmar"
+      },
+      {
+        "id": "1674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NR",
+        "name": "Nauru"
+      },
+      {
+        "id": "1774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NC",
+        "name": "New Caledonia"
+      },
+      {
+        "id": "1874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NZ",
+        "name": "New Zealand"
+      },
+      {
+        "id": "1974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NU",
+        "name": "Niue"
+      },
+      {
+        "id": "1a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MP",
+        "name": "Northern Mariana Islands"
+      },
+      {
+        "id": "1b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PW",
+        "name": "Palau"
+      },
+      {
+        "id": "1c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PG",
+        "name": "Papua New Guinea"
+      },
+      {
+        "id": "1d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PH",
+        "name": "Philippines"
+      },
+      {
+        "id": "1e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "WS",
+        "name": "Samoa"
+      },
+      {
+        "id": "1f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SG",
+        "name": "Singapore"
+      },
+      {
+        "id": "2074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SB",
+        "name": "Solomon Islands"
+      },
+      {
+        "id": "2174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TW",
+        "name": "Taiwan, China"
+      },
+      {
+        "id": "2274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TH",
+        "name": "Thailand"
+      },
+      {
+        "id": "2374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TP",
+        "name": "Timor-Leste"
+      },
+      {
+        "id": "2474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TO",
+        "name": "Tonga"
+      },
+      {
+        "id": "2574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TV",
+        "name": "Tuvalu"
+      },
+      {
+        "id": "2674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VU",
+        "name": "Vanuatu"
+      },
+      {
+        "id": "2774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VN",
+        "name": "Vietnam"
+      },
+      {
+        "id": "2874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "7E",
+        "name": "Europe and Central Asia"
+      },
+      {
+        "id": "2974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AL",
+        "name": "Albania"
+      },
+      {
+        "id": "2a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AD",
+        "name": "Andorra"
+      },
+      {
+        "id": "2b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AM",
+        "name": "Armenia"
+      },
+      {
+        "id": "2c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AT",
+        "name": "Austria"
+      },
+      {
+        "id": "2d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AZ",
+        "name": "Azerbaijan"
+      },
+      {
+        "id": "2e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BY",
+        "name": "Belarus"
+      },
+      {
+        "id": "2f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BE",
+        "name": "Belgium"
+      },
+      {
+        "id": "3074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BA",
+        "name": "Bosnia and Herzegovina"
+      },
+      {
+        "id": "3174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BG",
+        "name": "Bulgaria"
+      },
+      {
+        "id": "3274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "HR",
+        "name": "Croatia"
+      },
+      {
+        "id": "3374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CY",
+        "name": "Cyprus"
+      },
+      {
+        "id": "3474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CZ",
+        "name": "Czech Republic"
+      },
+      {
+        "id": "3574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DK",
+        "name": "Denmark"
+      },
+      {
+        "id": "3674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "EN",
+        "name": "Estonia"
+      },
+      {
+        "id": "3774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "FO",
+        "name": "Faroe Islands"
+      },
+      {
+        "id": "3874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "FI",
+        "name": "Finland"
+      },
+      {
+        "id": "3974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "FR",
+        "name": "France"
+      },
+      {
+        "id": "3a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GE",
+        "name": "Georgia"
+      },
+      {
+        "id": "3b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DE",
+        "name": "Germany"
+      },
+      {
+        "id": "3c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GI",
+        "name": "Gibraltar"
+      },
+      {
+        "id": "3d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GR",
+        "name": "Greece"
+      },
+      {
+        "id": "3e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GL",
+        "name": "Greenland"
+      },
+      {
+        "id": "3f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "HU",
+        "name": "Hungary"
+      },
+      {
+        "id": "4074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IS",
+        "name": "Iceland"
+      },
+      {
+        "id": "4174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IE",
+        "name": "Ireland"
+      },
+      {
+        "id": "4274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IM",
+        "name": "Isle of Man"
+      },
+      {
+        "id": "4374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IT",
+        "name": "Italy"
+      },
+      {
+        "id": "4474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KZ",
+        "name": "Kazakhstan"
+      },
+      {
+        "id": "4574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "XK",
+        "name": "Kosovo"
+      },
+      {
+        "id": "4674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KG",
+        "name": "Kyrgyz Republic"
+      },
+      {
+        "id": "4774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LV",
+        "name": "Latvia"
+      },
+      {
+        "id": "4874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LI",
+        "name": "Liechtenstein"
+      },
+      {
+        "id": "4974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LT",
+        "name": "Lithuania"
+      },
+      {
+        "id": "4a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LU",
+        "name": "Luxembourg"
+      },
+      {
+        "id": "4b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MD",
+        "name": "Moldova"
+      },
+      {
+        "id": "4c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MC",
+        "name": "Monaco"
+      },
+      {
+        "id": "4d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ME",
+        "name": "Montenegro"
+      },
+      {
+        "id": "4e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NL",
+        "name": "Netherlands"
+      },
+      {
+        "id": "4f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MK",
+        "name": "North Macedonia"
+      },
+      {
+        "id": "5074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NO",
+        "name": "Norway"
+      },
+      {
+        "id": "5174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PL",
+        "name": "Poland"
+      },
+      {
+        "id": "5274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PT",
+        "name": "Portugal"
+      },
+      {
+        "id": "5374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "RO",
+        "name": "Romania"
+      },
+      {
+        "id": "5474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "RU",
+        "name": "Russian Federation"
+      },
+      {
+        "id": "5574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SM",
+        "name": "San Marino"
+      },
+      {
+        "id": "5674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "YF",
+        "name": "Serbia"
+      },
+      {
+        "id": "5774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SK",
+        "name": "Slovak Republic"
+      },
+      {
+        "id": "5874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SI",
+        "name": "Slovenia"
+      },
+      {
+        "id": "5974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ES",
+        "name": "Spain"
+      },
+      {
+        "id": "5a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SE",
+        "name": "Sweden"
+      },
+      {
+        "id": "5b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CH",
+        "name": "Switzerland"
+      },
+      {
+        "id": "5c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TJ",
+        "name": "Tajikistan"
+      },
+      {
+        "id": "5d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TR",
+        "name": "T?rkiye"
+      },
+      {
+        "id": "5e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TM",
+        "name": "Turkmenistan"
+      },
+      {
+        "id": "5f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "UA",
+        "name": "Ukraine"
+      },
+      {
+        "id": "6074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GB",
+        "name": "United Kingdom"
+      },
+      {
+        "id": "6174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "UZ",
+        "name": "Uzbekistan"
+      },
+      {
+        "id": "6274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AI",
+        "name": "Anguilla"
+      },
+      {
+        "id": "6374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AG",
+        "name": "Antigua and Barbuda"
+      },
+      {
+        "id": "6474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AW",
+        "name": "Aruba"
+      },
+      {
+        "id": "6574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AR",
+        "name": "Argentina"
+      },
+      {
+        "id": "6674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BS",
+        "name": "Bahamas, The"
+      },
+      {
+        "id": "6774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BB",
+        "name": "Barbados"
+      },
+      {
+        "id": "6874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BZ",
+        "name": "Belize"
+      },
+      {
+        "id": "6974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BO",
+        "name": "Bolivia"
+      },
+      {
+        "id": "6a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BR",
+        "name": "Brazil"
+      },
+      {
+        "id": "6b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VG",
+        "name": "Virgin Islands, British"
+      },
+      {
+        "id": "6c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KY",
+        "name": "Cayman Islands"
+      },
+      {
+        "id": "6d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CL",
+        "name": "Chile"
+      },
+      {
+        "id": "6e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CR",
+        "name": "Costa Rica"
+      },
+      {
+        "id": "6f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CO",
+        "name": "Colombia"
+      },
+      {
+        "id": "7074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CU",
+        "name": "Cuba"
+      },
+      {
+        "id": "7174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DM",
+        "name": "Dominica"
+      },
+      {
+        "id": "7274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DO",
+        "name": "Dominican Republic"
+      },
+      {
+        "id": "7374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "EC",
+        "name": "Ecuador"
+      },
+      {
+        "id": "7474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SV",
+        "name": "El Salvador"
+      },
+      {
+        "id": "7574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GD",
+        "name": "Grenada"
+      },
+      {
+        "id": "7674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GT",
+        "name": "Guatemala"
+      },
+      {
+        "id": "7774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GY",
+        "name": "Guyana"
+      },
+      {
+        "id": "7874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "HT",
+        "name": "Haiti"
+      },
+      {
+        "id": "7974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "HN",
+        "name": "Honduras"
+      },
+      {
+        "id": "7a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "JM",
+        "name": "Jamaica"
+      },
+      {
+        "id": "7b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MQ",
+        "name": "Martinique"
+      },
+      {
+        "id": "7c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MX",
+        "name": "Mexico"
+      },
+      {
+        "id": "7d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MS",
+        "name": "Montserrat"
+      },
+      {
+        "id": "7e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NI",
+        "name": "Nicaragua"
+      },
+      {
+        "id": "7f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PA",
+        "name": "Panama"
+      },
+      {
+        "id": "8074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PY",
+        "name": "Paraguay"
+      },
+      {
+        "id": "8174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PE",
+        "name": "Peru"
+      },
+      {
+        "id": "8274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AN",
+        "name": "Netherlands Antilles"
+      },
+      {
+        "id": "8374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PR",
+        "name": "Puerto Rico"
+      },
+      {
+        "id": "8474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MF",
+        "name": "Saint Martin (French part)"
+      },
+      {
+        "id": "8574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KN",
+        "name": "St. Kitts and Nevis"
+      },
+      {
+        "id": "8774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LC",
+        "name": "St. Lucia"
+      },
+      {
+        "id": "8874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VC",
+        "name": "St. Vincent and the Grenadines"
+      },
+      {
+        "id": "8974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SR",
+        "name": "Suriname"
+      },
+      {
+        "id": "8a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TT",
+        "name": "Trinidad and Tobago"
+      },
+      {
+        "id": "8b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TC",
+        "name": "Turks and Caicos Islands"
+      },
+      {
+        "id": "8c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "UY",
+        "name": "Uruguay"
+      },
+      {
+        "id": "8d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VE",
+        "name": "Venezuela, Republica Bolivariana de"
+      },
+      {
+        "id": "8e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "VI",
+        "name": "Virgin Islands, US"
+      },
+      {
+        "id": "8f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "5M",
+        "name": "Middle East and North Africa"
+      },
+      {
+        "id": "9074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DZ",
+        "name": "Algeria"
+      },
+      {
+        "id": "9174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BH",
+        "name": "Bahrain"
+      },
+      {
+        "id": "9274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "EG",
+        "name": "Egypt, Arab Republic of"
+      },
+      {
+        "id": "9374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "DJ",
+        "name": "Djibouti"
+      },
+      {
+        "id": "9474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IQ",
+        "name": "Iraq"
+      },
+      {
+        "id": "9574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IR",
+        "name": "Iran, Islamic Republic of"
+      },
+      {
+        "id": "9674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IL",
+        "name": "Israel"
+      },
+      {
+        "id": "9774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "JO",
+        "name": "Jordan"
+      },
+      {
+        "id": "9874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KW",
+        "name": "Kuwait"
+      },
+      {
+        "id": "9974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LB",
+        "name": "Lebanon"
+      },
+      {
+        "id": "9a74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LY",
+        "name": "Libya"
+      },
+      {
+        "id": "9b74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MT",
+        "name": "Malta"
+      },
+      {
+        "id": "9c74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MA",
+        "name": "Morocco"
+      },
+      {
+        "id": "9d74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "OM",
+        "name": "Oman"
+      },
+      {
+        "id": "9e74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "QA",
+        "name": "Qatar"
+      },
+      {
+        "id": "9f74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SA",
+        "name": "Saudi Arabia"
+      },
+      {
+        "id": "a074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SY",
+        "name": "Syrian Arab Republic"
+      },
+      {
+        "id": "a174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GZ",
+        "name": "West Bank and Gaza"
+      },
+      {
+        "id": "a274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AE",
+        "name": "United Arab Emirates"
+      },
+      {
+        "id": "a374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TN",
+        "name": "Tunisia"
+      },
+      {
+        "id": "a474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "YD",
+        "name": "Yemen, People's Democratic Republic of"
+      },
+      {
+        "id": "a574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BM",
+        "name": "Bermuda"
+      },
+      {
+        "id": "a674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CA",
+        "name": "Canada"
+      },
+      {
+        "id": "a774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "US",
+        "name": "United States"
+      },
+      {
+        "id": "a874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "8S",
+        "name": "South Asia"
+      },
+      {
+        "id": "a974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AF",
+        "name": "Afghanistan"
+      },
+      {
+        "id": "aa74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BD",
+        "name": "Bangladesh"
+      },
+      {
+        "id": "ab74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BT",
+        "name": "Bhutan"
+      },
+      {
+        "id": "ac74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "IN",
+        "name": "India"
+      },
+      {
+        "id": "ad74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "PK",
+        "name": "Pakistan"
+      },
+      {
+        "id": "ae74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NP",
+        "name": "Nepal"
+      },
+      {
+        "id": "af74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MV",
+        "name": "Maldives"
+      },
+      {
+        "id": "b074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LK",
+        "name": "Sri Lanka"
+      },
+      {
+        "id": "b174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "AO",
+        "name": "Angola"
+      },
+      {
+        "id": "b274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BJ",
+        "name": "Benin"
+      },
+      {
+        "id": "b374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BW",
+        "name": "Botswana"
+      },
+      {
+        "id": "b474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BF",
+        "name": "Burkina Faso"
+      },
+      {
+        "id": "b574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "BI",
+        "name": "Burundi"
+      },
+      {
+        "id": "b674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CV",
+        "name": "Cabo Verde"
+      },
+      {
+        "id": "b774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CM",
+        "name": "Cameroon"
+      },
+      {
+        "id": "b874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CF",
+        "name": "Central African Republic"
+      },
+      {
+        "id": "b974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TD",
+        "name": "Chad"
+      },
+      {
+        "id": "ba74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KM",
+        "name": "Comoros"
+      },
+      {
+        "id": "bb74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ZR",
+        "name": "Congo, Democratic Republic of"
+      },
+      {
+        "id": "bc74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "CG",
+        "name": "Congo, Republic of"
+      },
+      {
+        "id": "bd74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ET",
+        "name": "Ethiopia"
+      },
+      {
+        "id": "be74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ER",
+        "name": "Eritrea"
+      },
+      {
+        "id": "bf74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GQ",
+        "name": "Equatorial Guinea"
+      },
+      {
+        "id": "c074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GA",
+        "name": "Gabon"
+      },
+      {
+        "id": "c174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GM",
+        "name": "Gambia, The"
+      },
+      {
+        "id": "c274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GH",
+        "name": "Ghana"
+      },
+      {
+        "id": "c374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GN",
+        "name": "Guinea"
+      },
+      {
+        "id": "c474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "GW",
+        "name": "Guinea-Bissau"
+      },
+      {
+        "id": "c574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "KE",
+        "name": "Kenya"
+      },
+      {
+        "id": "c674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LS",
+        "name": "Lesotho"
+      },
+      {
+        "id": "c774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "LR",
+        "name": "Liberia"
+      },
+      {
+        "id": "c874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MG",
+        "name": "Madagascar"
+      },
+      {
+        "id": "c974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MW",
+        "name": "Malawi"
+      },
+      {
+        "id": "ca74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ML",
+        "name": "Mali"
+      },
+      {
+        "id": "cb74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MR",
+        "name": "Mauritania"
+      },
+      {
+        "id": "cc74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MU",
+        "name": "Mauritius"
+      },
+      {
+        "id": "cd74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "MZ",
+        "name": "Mozambique"
+      },
+      {
+        "id": "ce74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NA",
+        "name": "Namibia"
+      },
+      {
+        "id": "cf74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NE",
+        "name": "Niger"
+      },
+      {
+        "id": "d074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "NG",
+        "name": "Nigeria"
+      },
+      {
+        "id": "d174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "RE",
+        "name": "Reunion"
+      },
+      {
+        "id": "d274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "RW",
+        "name": "Rwanda"
+      },
+      {
+        "id": "d374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SC",
+        "name": "Seychelles"
+      },
+      {
+        "id": "d474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SN",
+        "name": "Senegal"
+      },
+      {
+        "id": "d574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SL",
+        "name": "Sierra Leone"
+      },
+      {
+        "id": "d674cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SO",
+        "name": "Somalia"
+      },
+      {
+        "id": "d774cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ZA",
+        "name": "South Africa"
+      },
+      {
+        "id": "d874cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SS",
+        "name": "South Sudan"
+      },
+      {
+        "id": "d974cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SD",
+        "name": "Sudan"
+      },
+      {
+        "id": "da74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "SZ",
+        "name": "Eswatini"
+      },
+      {
+        "id": "db74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TZ",
+        "name": "Tanzania"
+      },
+      {
+        "id": "dc74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "TG",
+        "name": "Togo"
+      },
+      {
+        "id": "dd74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "UG",
+        "name": "Uganda"
+      },
+      {
+        "id": "de74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ZM",
+        "name": "Zambia"
+      },
+      {
+        "id": "df74cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "code": "ZW",
+        "name": "Zimbabwe"
+      }
+    ],
+    "geo_json": null,
+    "bounding_box": {
+      "west_longitude": null,
+      "east_longitude": null,
+      "north_latitude": null,
+      "south_latitude": null
+    },
+    "vertical_extent": {
+      "min_value": null,
+      "max_value": null,
+      "vertical_CRS": null,
+      "vertical_CRS_id": null
+    }
+  },
+  "temporal_extent": {
+    "id": "e074cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "end_date": null,
+    "start_date": null,
+    "description": null,
+    "duration": null,
+    "coverage": null
+  },
+  "temporal_resolution": {
+    "periodicity": null
+  },
+  "spatial_resolution": {
+    "id": "e174cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "granularity": null,
+    "granularity_list": null,
+    "pixel_resolution": null
+  },
+  "reference_system": {
+    "id": "e274cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "reference_id": null,
+    "version": "5",
+    "map_projection": null
+  },
+  "lineage": {
+    "id": "e374cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "source_type": null,
+    "source_type_list": null,
+    "source": null,
+    "source_reference": null,
+    "statistical_concept_and_methodology": null,
+    "base_period": null,
+    "aggregation_method": null,
+    "description": null,
+    "related_links_and_publications": null,
+    "publication_place": null,
+    "funding_name_abbreviation_role": null,
+    "study_type": null,
+    "deviations_from_sample_design": null,
+    "other_acknowledgements": null,
+    "harvest_system": "Others",
+    "harvest_system_reference": null
+  },
+  "maintenance_information": {
+    "id": "e474cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "update_frequency": null,
+    "update_schedule": null,
+    "maintenance_note": null,
+    "embargo_date": null,
+    "embargo_comments": null,
+    "version_description": null,
+    "version_production_date": "3/14/2022 12:43:11 PM",
+    "version_producer": "Sangamesh Naidu Mullaguru",
+    "version_notes": null,
+    "version_history": [
+      {
+        "version": "1",
+        "version_label": "PUBLISHED",
+        "version_id": "@2021-10-21T10:05:42.9237834Z",
+        "uuid": "0284a9b4-08c8-eb11-bacc-000d3a5a1a58",
+        "version_date": null
+      },
+      {
+        "version": "2",
+        "version_label": "Updated",
+        "version_id": "@2021-11-01T15:56:50.4471614Z",
+        "uuid": "e80c0c03-2c3b-ec11-b6e5-00224805d2bc",
+        "version_date": null
+      },
+      {
+        "version": "3",
+        "version_label": "publish v3",
+        "version_id": "@2022-03-07T16:07:29.1011270Z",
+        "uuid": "ed6f7f90-9856-ec11-8f8f-000d3a5cbf39",
+        "version_date": null
+      },
+      {
+        "version": "4",
+        "version_label": "Added link to interactive map",
+        "version_id": "@2022-03-08T02:36:03.9941586Z",
+        "uuid": "0278644a-889e-ec11-b400-00224809c22a",
+        "version_date": null
+      },
+      {
+        "version": "5",
+        "version_label": "updated",
+        "version_id": "@2023-01-18T20:36:25.6660126Z",
+        "uuid": "fd9586f2-93a3-ec11-983f-000d3a5c3353",
+        "version_date": null
+      }
+    ]
+  },
+  "subscription": {
+    "id": "e574cf91-b4c7-eb11-bacc-000d3a5a1a58",
+    "subscription_date_from": null,
+    "subscription_date_to": null
+  },
+  "resources": [
+    {
+      "resource_id": "2141bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+      "name": "Global Ship Density",
+      "resource_unique_id": "DR0045406",
+      "archive_nid": "1237141",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "2341bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "title": "Global Ship Density",
+        "type": "Dataset",
+        "description": "This dataset is based on all observed ship movement from 2015-2020, at 500 m resolution.\r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that are considered for the density layer.\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "2441bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "2541bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045406/shipdensity_global.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "510.1 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "shipdensity_global.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "2641bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "2741bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/shipdensity_global.zip"
+      },
+      "maintenance_information": {
+        "id": "2841bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "2941bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "2a41bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "2b41bdeb-b4c7-eb11-bacc-000d3a5a1a58",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "8ed5940b-b5c7-eb11-bacc-000d3a5a1a58",
+      "name": "Breakdown of vessel types ",
+      "resource_unique_id": "DR0045407",
+      "archive_nid": "1237146",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "90d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "title": "Breakdown of vessel types ",
+        "type": "Documentation",
+        "description": "Breakdown of vessel types for each Ship Density layer.",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "91d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "92d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "format": "text",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045407/readme_ddh.txt",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "TXT",
+        "distribution_size": "1.1 KB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "readme_ddh.txt",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "93d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "94d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/readme_ddh.txt"
+      },
+      "maintenance_information": {
+        "id": "95d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "96d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "97d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "98d5940b-b5c7-eb11-bacc-000d3a5a1a58",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "c75b719b-b4c7-eb11-bacc-000d3a5a1c19",
+      "name": "Ship Density - Leisure",
+      "resource_unique_id": "DR0045401",
+      "archive_nid": "1237101",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "c95b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "title": "Ship Density - Leisure",
+        "type": "Dataset",
+        "description": "This dataset is based on leisure ship movement from 2015-2020. \r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that comprise the category LEISURE\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "ca5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "cb5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045401/ShipDensity_Leisure.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "28.1 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "ShipDensity_Leisure.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "cc5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "cd5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/ShipDensity_Leisure.zip"
+      },
+      "maintenance_information": {
+        "id": "ce5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "cf5b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "d05b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "d15b719b-b4c7-eb11-bacc-000d3a5a1c19",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "d99859b3-b4c7-eb11-bacc-000d3a5a1c19",
+      "name": "Ship Density - Oil and Gas",
+      "resource_unique_id": "DR0045402",
+      "archive_nid": "1237111",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "db9859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "title": "Ship Density - Oil and Gas",
+        "type": "Dataset",
+        "description": "This dataset is based on Oil and Gas ship movement from 2015-2020. \r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that comprise the category OIL AND GAS.\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "dc9859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "dd9859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045402/ShipDensity_OilGas.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "20.5 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "ShipDensity_OilGas.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "de9859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "df9859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/ShipDensity_OilGas.zip"
+      },
+      "maintenance_information": {
+        "id": "e09859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "e19859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "e29859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "e39859b3-b4c7-eb11-bacc-000d3a5a1c19",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "6b4254b9-b4c7-eb11-bacc-000d3a5a1c19",
+      "name": "Ship Density - Fishing",
+      "resource_unique_id": "DR0045403",
+      "archive_nid": "1237121",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "6d4254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "title": "Ship Density - Fishing",
+        "type": "Dataset",
+        "description": "This dataset is based on fishing ship movement from 2015-2020. \r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that comprise the category FISHING\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "6e4254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "6f4254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045403/ShipDensity_Fishing.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "97.0 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "ShipDensity_Fishing.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "704254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "714254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/ShipDensity_Fishing.zip"
+      },
+      "maintenance_information": {
+        "id": "724254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "734254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "744254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "754254b9-b4c7-eb11-bacc-000d3a5a1c19",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "17cf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+      "name": "Ship Density - Passenger",
+      "resource_unique_id": "DR0045404",
+      "archive_nid": "1237131",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "19cf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "title": "Ship Density - Passenger",
+        "type": "Dataset",
+        "description": "This dataset is based on passenger ship movement from 2015-2020. \r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that comprise the category PASSENGER\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "1acf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "1bcf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045404/ShipDensity_Passenger.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "21.8 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "ShipDensity_Passenger.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "1ccf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "1dcf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/ShipDensity_Passenger.zip"
+      },
+      "maintenance_information": {
+        "id": "1ecf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "1fcf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "20cf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "21cf44c5-b4c7-eb11-bacc-000d3a5a1c19",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "ed123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+      "name": "Ship Density - Commercial",
+      "resource_unique_id": "DR0045405",
+      "archive_nid": "1237136",
+      "last_updated": "5/3/2021 12:00:00 AM",
+      "last_updated_date": "2021-05-03T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "ef123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "title": "Ship Density - Commercial",
+        "type": "Download",
+        "description": "This dataset is based on commercial ship movement from 2015-2020. \r\nPlease consult the read.me file for a detailed breakdown of the different vessel types that comprise the category COMMERCIAL\r\n",
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "f0123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "f1123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "format": "zip",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "ZIP",
+        "distribution_size": "458.1 MB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "shipdensity_commercial_.zip",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "f2123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "f3123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "harvest_system": null,
+        "harvest_system_reference": "https://development-data-hub-s3-public.s3.amazonaws.com/ddhfiles/1236726/shipdensity_commercial_.zip"
+      },
+      "maintenance_information": {
+        "id": "f4123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": null,
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "f5123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "f6123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "f7123dcb-b4c7-eb11-bacc-000d3a5a1c19",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    },
+    {
+      "resource_id": "32ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+      "name": "Read me",
+      "resource_unique_id": "DR0084213",
+      "archive_nid": null,
+      "last_updated": "11/1/2021 12:00:00 AM",
+      "last_updated_date": "2021-11-01T00:00:00",
+      "first_published_date": null,
+      "download_count": null,
+      "dataset_id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+      "dataset": {
+        "id": "f173cf91-b4c7-eb11-bacc-000d3a5a1a58",
+        "name": "Global Shipping Traffic Density",
+        "unique_id": "0037580"
+      },
+      "identification": {
+        "id": "34ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "title": "Read me",
+        "type": null,
+        "description": null,
+        "status": "Active",
+        "work_unit": null,
+        "citation": null,
+        "keywords": null,
+        "language_supported": null,
+        "sort_order": null
+      },
+      "constraints": {
+        "id": "35ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "legal": {
+          "access_constraints": null,
+          "use_constraints": null,
+          "other_constraints": null,
+          "disclaimer": null,
+          "copyright": null
+        },
+        "security": {
+          "classification": "Public",
+          "exception": null,
+          "user_note": null
+        },
+        "license": {
+          "license_id": null,
+          "custom_license_information": null,
+          "license_reference": null,
+          "exception": null
+        }
+      },
+      "distribution": {
+        "id": "36ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "format": "text",
+        "url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0084213/readme.txt",
+        "ext_url": null,
+        "website_url": null,
+        "distribution_description": null,
+        "distribution_format": "txt",
+        "distribution_size": "1.0 KB",
+        "is_directory": null,
+        "is_large_dataset": null,
+        "file_name": "readme.txt",
+        "preview_api_url": null
+      },
+      "geographical_extent": {
+        "id": "37ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "description": null,
+        "coverage": null,
+        "geo_json": null,
+        "bounding_box": {
+          "west_longitude": null,
+          "east_longitude": null,
+          "north_latitude": null,
+          "south_latitude": null
+        }
+      },
+      "lineage": {
+        "id": "38ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "harvest_system": null,
+        "harvest_system_reference": null
+      },
+      "maintenance_information": {
+        "id": "39ef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "update_frequency": null,
+        "maintenance_note": null,
+        "version": null,
+        "version_date": "11/1/2021 12:00:00 AM",
+        "version_notes": null,
+        "version_description": null,
+        "version_producer": "Sangamesh Naidu Mullaguru"
+      },
+      "reference_system": {
+        "id": "3aef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "reference_id": null,
+        "version": null,
+        "map_projection": null
+      },
+      "spatial_resolution": {
+        "id": "3bef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "granularity": null,
+        "pixel_resolution": null
+      },
+      "temporal_extent": {
+        "id": "3cef0d97-ed3a-ec11-b6e5-0022480af5b8",
+        "end_date": null,
+        "start_date": null,
+        "description": null,
+        "duration": null,
+        "coverage": null
+      },
+      "temporal_resolution": {
+        "periodicity": null
+      }
+    }
+  ],
+  "indicators": [],
+  "citation": []
+}

@@ -1,0 +1,7 @@
+dataset
+chat.txt
+.venv
+venv
+*.png
+*.jpg
+*.pdf
