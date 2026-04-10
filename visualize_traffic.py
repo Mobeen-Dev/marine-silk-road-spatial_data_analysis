@@ -1,215 +1,348 @@
 """
-Marine Traffic Visualization - Interactive World Map
-Generates an HTML heatmap of global shipping traffic
+Generate a seamless, smooth-zoom marine traffic visualization (HTML + JavaScript).
+
+Key upgrades:
+1. Single-world rendering (no repeated world copies at antimeridian)
+2. Smooth/fractional zoom transitions
+3. Multi-resolution heatmap for better readability at each zoom level
+4. Continuous density gradient legend
+5. Clustered hotspot layer to reduce clutter on zoom-out
 """
 
-import pandas as pd
-import folium
-from folium.plugins import HeatMap
+from __future__ import annotations
+
+import json
 from pathlib import Path
 
-print("=" * 60)
-print("MARINE TRAFFIC VISUALIZATION")
-print("=" * 60)
+import numpy as np
+import pandas as pd
 
-# Paths
+
 DATA_DIR = Path("analysis_outputs")
 OUTPUT_DIR = Path("media")
-OUTPUT_DIR.mkdir(exist_ok=True)
+OUTPUT_FILE = OUTPUT_DIR / "shipping_visualization_advanced.html"
 
-# Load all three categories
-print("\n📂 Loading datasets...")
 
-commercial = pd.read_csv(DATA_DIR / "traffic_commercial_world.csv")
-print(f"  Commercial: {len(commercial):,} points")
+def aggregate_grid(df: pd.DataFrame, grid_deg: float) -> list[list[float]]:
+    """Aggregate points to a lat/lon grid and return heat triples [lat, lon, weight]."""
+    if df.empty:
+        return []
 
-passenger = pd.read_csv(DATA_DIR / "traffic_passenger_world.csv")
-print(f"  Passenger:  {len(passenger):,} points")
+    work = df[["latitude", "longitude", "intensity_normalized"]].copy()
 
-oil_gas = pd.read_csv(DATA_DIR / "traffic_oil_gas_world.csv")
-print(f"  Oil & Gas:  {len(oil_gas):,} points")
+    work["lat_bin"] = (
+        np.floor((work["latitude"] + 90.0) / grid_deg) * grid_deg - 90.0 + grid_deg / 2.0
+    )
+    work["lon_bin"] = (
+        np.floor((work["longitude"] + 180.0) / grid_deg) * grid_deg - 180.0 + grid_deg / 2.0
+    )
 
-# ============================================================
-# MAP 1: Combined Heatmap (All Categories)
-# ============================================================
-print("\n🗺️  Creating combined heatmap...")
+    grouped = (
+        work.groupby(["lat_bin", "lon_bin"], as_index=False)["intensity_normalized"]
+        .sum()
+        .rename(columns={"intensity_normalized": "weight"})
+    )
+    max_weight = float(grouped["weight"].max()) or 1.0
+    grouped["weight"] = grouped["weight"] / max_weight
 
-m1 = folium.Map(
-    location=[20, 0],
-    zoom_start=2,
-    tiles='CartoDB dark_matter',
-    control_scale=True
-)
+    return grouped[["lat_bin", "lon_bin", "weight"]].round(5).values.tolist()
 
-# Add commercial layer (blue-ish through default)
-commercial_data = commercial[['latitude', 'longitude', 'intensity_normalized']].values.tolist()
-HeatMap(
-    commercial_data,
-    radius=6,
-    blur=8,
-    max_zoom=10,
-    gradient={0.2: 'blue', 0.4: 'cyan', 0.6: 'lime', 0.8: 'yellow', 1: 'red'}
-).add_to(m1)
 
-# Add title
-title_html = '''
-<div style="position: fixed; top: 10px; left: 50px; z-index: 1000; 
-            background-color: rgba(0,0,0,0.7); padding: 10px 20px; 
-            border-radius: 5px; color: white; font-family: Arial;">
-    <h3 style="margin: 0;">🚢 Global Marine Traffic Density</h3>
-    <p style="margin: 5px 0 0 0; font-size: 12px;">Commercial Shipping (AIS Data 2015-2021)</p>
-</div>
-'''
-m1.get_root().html.add_child(folium.Element(title_html))
+def build_hotspot_payload(df: pd.DataFrame) -> list[dict[str, float | str]]:
+    """Build compact hotspot payload for clustered markers."""
+    out: list[dict[str, float | str]] = []
+    for row in df.itertuples(index=False):
+        out.append(
+            {
+                "lat": round(float(row.latitude), 5),
+                "lon": round(float(row.longitude), 5),
+                "density": int(row.density),
+                "intensity": round(float(row.intensity), 4),
+                "category": str(row.category),
+            }
+        )
+    return out
 
-map1_path = OUTPUT_DIR / "shipping_heatmap_combined.html"
-m1.save(str(map1_path))
-print(f"  ✓ Saved: {map1_path}")
 
-# ============================================================
-# MAP 2: Category Comparison (Layer Control)
-# ============================================================
-print("\n🗺️  Creating category comparison map...")
+def main() -> None:
+    print("=" * 72)
+    print("BUILDING ADVANCED MARINE TRAFFIC VISUALIZATION")
+    print("=" * 72)
 
-m2 = folium.Map(
-    location=[20, 0],
-    zoom_start=2,
-    tiles='CartoDB positron',
-    control_scale=True
-)
+    OUTPUT_DIR.mkdir(exist_ok=True)
 
-# Commercial layer (Red/Orange)
-fg_commercial = folium.FeatureGroup(name='🚢 Commercial Shipping')
-HeatMap(
-    commercial[['latitude', 'longitude', 'intensity_normalized']].values.tolist(),
-    radius=6,
-    blur=8,
-    gradient={0.4: 'orange', 0.7: 'red', 1: 'darkred'}
-).add_to(fg_commercial)
-fg_commercial.add_to(m2)
+    commercial = pd.read_csv(DATA_DIR / "traffic_commercial_world.csv")
+    passenger = pd.read_csv(DATA_DIR / "traffic_passenger_world.csv")
+    oil_gas = pd.read_csv(DATA_DIR / "traffic_oil_gas_world.csv")
+    hotspots = pd.read_csv(DATA_DIR / "traffic_combined_hotspots.csv")
 
-# Passenger layer (Blue)
-fg_passenger = folium.FeatureGroup(name='🛳️ Passenger Ferries & Cruises')
-HeatMap(
-    passenger[['latitude', 'longitude', 'intensity_normalized']].values.tolist(),
-    radius=8,
-    blur=10,
-    gradient={0.4: 'lightblue', 0.7: 'blue', 1: 'darkblue'}
-).add_to(fg_passenger)
-fg_passenger.add_to(m2)
+    print(f"Commercial points: {len(commercial):,}")
+    print(f"Passenger points : {len(passenger):,}")
+    print(f"Oil & Gas points : {len(oil_gas):,}")
+    print(f"Hotspot points   : {len(hotspots):,}")
 
-# Oil & Gas layer (Green/Yellow)
-fg_oilgas = folium.FeatureGroup(name='🛢️ Oil & Gas Platforms')
-HeatMap(
-    oil_gas[['latitude', 'longitude', 'intensity_normalized']].values.tolist(),
-    radius=10,
-    blur=12,
-    gradient={0.4: 'lightgreen', 0.7: 'green', 1: 'darkgreen'}
-).add_to(fg_oilgas)
-fg_oilgas.add_to(m2)
+    # Merge categories for a single global density surface.
+    merged = pd.concat([commercial, passenger, oil_gas], ignore_index=True)
 
-# Add layer control
-folium.LayerControl(collapsed=False).add_to(m2)
+    # Multi-resolution layers keep the map readable at each zoom level.
+    heat_low = aggregate_grid(merged, grid_deg=1.0)    # zoomed-out global view
+    heat_mid = aggregate_grid(merged, grid_deg=0.5)    # regional view
+    heat_high = aggregate_grid(merged, grid_deg=0.25)  # local detail
 
-# Add title
-title_html2 = '''
-<div style="position: fixed; top: 10px; left: 50px; z-index: 1000; 
-            background-color: rgba(255,255,255,0.9); padding: 10px 20px; 
-            border-radius: 5px; font-family: Arial; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
-    <h3 style="margin: 0; color: #333;">🌊 Marine Traffic by Category</h3>
-    <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">Use layer controls to toggle categories</p>
-</div>
-'''
-m2.get_root().html.add_child(folium.Element(title_html2))
+    print(f"Heat points (low/mid/high): {len(heat_low):,} / {len(heat_mid):,} / {len(heat_high):,}")
 
-map2_path = OUTPUT_DIR / "shipping_heatmap_categories.html"
-m2.save(str(map2_path))
-print(f"  ✓ Saved: {map2_path}")
+    hotspot_payload = build_hotspot_payload(hotspots)
 
-# ============================================================
-# MAP 3: Hotspots Only (High Traffic Areas)
-# ============================================================
-print("\n🗺️  Creating hotspots map...")
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marine Traffic Density - Advanced Visualization</title>
 
-m3 = folium.Map(
-    location=[30, 50],
-    zoom_start=3,
-    tiles='CartoDB dark_matter'
-)
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
-# Load hotspots
-hotspots = pd.read_csv(DATA_DIR / "traffic_combined_hotspots.csv")
-print(f"  Hotspots loaded: {len(hotspots):,} points")
+  <style>
+    html, body, #map {{
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }}
+    .panel {{
+      position: absolute;
+      z-index: 1000;
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
+      max-width: 340px;
+      font-size: 13px;
+      line-height: 1.4;
+    }}
+    .panel h2 {{
+      margin: 0 0 6px 0;
+      font-size: 16px;
+      color: #1e2a38;
+    }}
+    .legend {{
+      margin-top: 10px;
+    }}
+    .gradient-bar {{
+      height: 12px;
+      border-radius: 8px;
+      border: 1px solid #c7d1db;
+      background: linear-gradient(
+        to right,
+        #1e3a8a 0%,
+        #2563eb 20%,
+        #06b6d4 40%,
+        #22c55e 60%,
+        #eab308 80%,
+        #ef4444 100%
+      );
+    }}
+    .legend-labels {{
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      color: #374151;
+      font-size: 11px;
+    }}
+    .hotspot-dot {{
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.45);
+    }}
+    .cat-commercial {{ background: #ef4444; }}
+    .cat-passenger {{ background: #3b82f6; }}
+    .cat-oilgas {{ background: #22c55e; }}
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="panel">
+    <h2>Global Marine Traffic Density</h2>
+    <div><b>Improvements:</b> seamless world bounds, smooth zoom, adaptive heat resolution, continuous gradient, clustered hotspots.</div>
+    <div style="margin-top:6px;">
+      <b>Zoom:</b> <span id="zoom-level">-</span> |
+      <b>Resolution:</b> <span id="resolution-level">-</span>
+    </div>
+    <div class="legend">
+      <b>Density gradient</b>
+      <div class="gradient-bar"></div>
+      <div class="legend-labels"><span>Low</span><span>High</span></div>
+    </div>
+  </div>
 
-# Separate by category for coloring
-commercial_hot = hotspots[hotspots['category'] == 'commercial']
-passenger_hot = hotspots[hotspots['category'] == 'passenger']
-oilgas_hot = hotspots[hotspots['category'] == 'oil_gas']
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
-# Add as circle markers for precision
-for _, row in commercial_hot.iterrows():
-    folium.CircleMarker(
-        location=[row['latitude'], row['longitude']],
-        radius=3,
-        color='red',
-        fill=True,
-        fillOpacity=0.6,
-        weight=0
-    ).add_to(m3)
+  <script>
+    // Embedded preprocessed payloads from Python.
+    const HEAT_LOW = {json.dumps(heat_low, separators=(",", ":"))};
+    const HEAT_MID = {json.dumps(heat_mid, separators=(",", ":"))};
+    const HEAT_HIGH = {json.dumps(heat_high, separators=(",", ":"))};
+    const HOTSPOTS = {json.dumps(hotspot_payload, separators=(",", ":"))};
 
-for _, row in passenger_hot.iterrows():
-    folium.CircleMarker(
-        location=[row['latitude'], row['longitude']],
-        radius=4,
-        color='cyan',
-        fill=True,
-        fillOpacity=0.8,
-        weight=0
-    ).add_to(m3)
+    // Smooth zoom + seamless single-world rendering configuration.
+    const map = L.map("map", {{
+      center: [20, 0],
+      zoom: 2.3,
+      minZoom: 2,
+      maxZoom: 9,
+      zoomSnap: 0.1,        // fractional zoom for smoother transitions
+      zoomDelta: 0.25,      // smaller step than default
+      wheelPxPerZoomLevel: 90,
+      zoomAnimation: true,
+      markerZoomAnimation: true,
+      fadeAnimation: true,
+      inertia: true,
+      worldCopyJump: false,
+      maxBounds: [[-85, -180], [85, 180]],
+      maxBoundsViscosity: 1.0,
+      preferCanvas: true
+    }});
 
-for _, row in oilgas_hot.iterrows():
-    folium.CircleMarker(
-        location=[row['latitude'], row['longitude']],
-        radius=5,
-        color='lime',
-        fill=True,
-        fillOpacity=0.8,
-        weight=0
-    ).add_to(m3)
+    L.tileLayer(
+      "https://{{s}}.basemaps.cartocdn.com/light_nolabels/{{z}}/{{x}}/{{y}}{{r}}.png",
+      {{
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        subdomains: "abcd",
+        noWrap: true, // prevents repeated world copies
+        bounds: [[-85, -180], [85, 180]],
+        detectRetina: true,
+        maxNativeZoom: 7,
+        maxZoom: 9
+      }}
+    ).addTo(map);
 
-# Legend
-legend_html = '''
-<div style="position: fixed; bottom: 30px; right: 30px; z-index: 1000; 
-            background-color: rgba(0,0,0,0.8); padding: 15px; 
-            border-radius: 5px; font-family: Arial; color: white;">
-    <h4 style="margin: 0 0 10px 0;">🔥 Traffic Hotspots</h4>
-    <p style="margin: 5px 0;"><span style="color: red;">●</span> Commercial</p>
-    <p style="margin: 5px 0;"><span style="color: cyan;">●</span> Passenger</p>
-    <p style="margin: 5px 0;"><span style="color: lime;">●</span> Oil & Gas</p>
-</div>
-'''
-m3.get_root().html.add_child(folium.Element(legend_html))
+    const heatGradient = {{
+      0.00: "#1e3a8a",
+      0.20: "#2563eb",
+      0.40: "#06b6d4",
+      0.60: "#22c55e",
+      0.80: "#eab308",
+      1.00: "#ef4444"
+    }};
 
-map3_path = OUTPUT_DIR / "shipping_hotspots.html"
-m3.save(str(map3_path))
-print(f"  ✓ Saved: {map3_path}")
+    const heatLayer = L.heatLayer([], {{
+      radius: 28,
+      blur: 20,
+      maxZoom: 9,
+      minOpacity: 0.30,
+      gradient: heatGradient
+    }}).addTo(map);
 
-# ============================================================
-# Summary
-# ============================================================
-print("\n" + "=" * 60)
-print("✅ VISUALIZATION COMPLETE!")
-print("=" * 60)
-print(f"\n📁 Output folder: {OUTPUT_DIR.absolute()}")
-print("\n📊 Generated maps:")
-print(f"  1. {map1_path.name}")
-print("     → Combined heatmap on dark background")
-print(f"  2. {map2_path.name}")
-print("     → Category comparison with layer toggle")
-print(f"  3. {map3_path.name}")
-print("     → Precise hotspot markers")
+    // Clustered hotspots keep zoomed-out view readable.
+    const clusters = L.markerClusterGroup({{
+      showCoverageOnHover: false,
+      spiderfyOnEveryZoom: false,
+      maxClusterRadius: 48,
+      disableClusteringAtZoom: 6
+    }});
 
-print("\n🌐 To view: Open any HTML file in your browser!")
-print(f"\n   Start command:")
-print(f"   start media\\shipping_heatmap_combined.html")
-print("=" * 60)
+    function categoryColor(category) {{
+      if (category === "commercial") return "#ef4444";
+      if (category === "passenger") return "#3b82f6";
+      return "#22c55e";
+    }}
+
+    function categoryClass(category) {{
+      if (category === "commercial") return "cat-commercial";
+      if (category === "passenger") return "cat-passenger";
+      return "cat-oilgas";
+    }}
+
+    HOTSPOTS.forEach((h) => {{
+      const marker = L.marker([h.lat, h.lon], {{
+        icon: L.divIcon({{
+          className: "",
+          html: `<div class="hotspot-dot ${{categoryClass(h.category)}}"></div>`,
+          iconSize: [10, 10],
+          iconAnchor: [5, 5]
+        }})
+      }});
+      marker.bindPopup(
+        `<b>Category:</b> ${{h.category.replace("_", " & ")}}<br>` +
+        `<b>Density:</b> ${{h.density.toLocaleString()}}<br>` +
+        `<b>Intensity:</b> ${{h.intensity}}`
+      );
+      clusters.addLayer(marker);
+    }});
+
+    clusters.addTo(map);
+    L.control.layers(null, {{
+      "Density Heatmap": heatLayer,
+      "Hotspot Clusters": clusters
+    }}, {{ collapsed: false }}).addTo(map);
+
+    function resolutionLabel(z) {{
+      if (z < 3.5) return "1.0° grid (global)";
+      if (z < 5.5) return "0.5° grid (regional)";
+      return "0.25° grid (detailed)";
+    }}
+
+    function chooseDataset(z) {{
+      if (z < 3.5) return HEAT_LOW;
+      if (z < 5.5) return HEAT_MID;
+      return HEAT_HIGH;
+    }}
+
+    function dynamicRadius(z) {{
+      // Interpolated radius keeps diffusion patterns visible across zoom levels.
+      return Math.max(10, Math.min(34, 34 - (z - 2) * 2.8));
+    }}
+
+    function dynamicBlur(z) {{
+      return Math.max(8, Math.min(24, 24 - (z - 2) * 1.8));
+    }}
+
+    let currentDatasetName = "";
+
+    function updateHeatLayer() {{
+      const z = map.getZoom();
+      const dataset = chooseDataset(z);
+      const datasetName = resolutionLabel(z);
+
+      if (datasetName !== currentDatasetName) {{
+        heatLayer.setLatLngs(dataset);
+        currentDatasetName = datasetName;
+      }}
+
+      heatLayer.setOptions({{
+        radius: dynamicRadius(z),
+        blur: dynamicBlur(z)
+      }});
+
+      document.getElementById("zoom-level").textContent = z.toFixed(1);
+      document.getElementById("resolution-level").textContent = datasetName;
+    }}
+
+    map.on("zoom", updateHeatLayer);
+    map.on("zoomend", updateHeatLayer);
+    updateHeatLayer();
+  </script>
+</body>
+</html>
+"""
+
+    OUTPUT_FILE.write_text(html, encoding="utf-8")
+
+    print(f"\nOutput written: {OUTPUT_FILE}")
+    print("\nRun:")
+    print("  .venv\\Scripts\\python.exe visualize_traffic.py")
+    print("Then open:")
+    print(f"  start {OUTPUT_FILE.as_posix().replace('/', chr(92))}")
+    print("=" * 72)
+
+
+if __name__ == "__main__":
+    main()
