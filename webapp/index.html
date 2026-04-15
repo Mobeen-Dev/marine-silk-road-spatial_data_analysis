@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Marine Traffic - Smooth Density Map</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+  />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="map"></div>
+
+  <aside class="panel">
+    <h1>Global Marine Traffic</h1>
+    <p class="subtitle">
+      Seam-safe world view, smooth zoom, and multi-resolution density rendering.
+    </p>
+
+    <div class="row">
+      <span class="label">Zoom</span>
+      <span id="zoomValue" class="value">-</span>
+    </div>
+    <div class="row">
+      <span class="label">Resolution</span>
+      <span id="resolutionValue" class="value">-</span>
+    </div>
+
+    <section>
+      <h2>Layers</h2>
+      <label><input id="toggleHeat" type="checkbox" checked /> Density heatmap</label>
+      <label><input id="toggleCluster" type="checkbox" checked /> Hotspot clusters</label>
+      <label><input id="toggleHotspots" type="checkbox" checked /> Hotspot points</label>
+    </section>
+
+    <section>
+      <h2>Hotspot categories</h2>
+      <label><input id="catCommercial" type="checkbox" checked /> Commercial</label>
+      <label><input id="catPassenger" type="checkbox" checked /> Passenger</label>
+      <label><input id="catOilGas" type="checkbox" checked /> Oil &amp; Gas</label>
+    </section>
+
+    <section>
+      <h2>Density gradient</h2>
+      <div class="gradient"></div>
+      <div class="legendLabels">
+        <span>Low</span>
+        <span>High</span>
+      </div>
+    </section>
+  </aside>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

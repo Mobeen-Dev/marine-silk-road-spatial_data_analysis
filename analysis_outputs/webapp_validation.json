@@ -1,0 +1,74 @@
+{
+  "required_files_exist": {
+    "webapp\\index.html": true,
+    "webapp\\app.js": true,
+    "webapp\\styles.css": true,
+    "webapp\\data\\density_low.geojson": true,
+    "webapp\\data\\density_mid.geojson": true,
+    "webapp\\data\\density_high.geojson": true,
+    "webapp\\data\\hotspots.geojson": true,
+    "webapp\\data\\metadata.json": true
+  },
+  "geojson_checks": {
+    "density_low": {
+      "feature_count": 18775,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "density_mid": {
+      "feature_count": 48285,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "density_high": {
+      "feature_count": 115558,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "hotspots": {
+      "feature_count": 12244,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    }
+  },
+  "metadata": {
+    "crs": "EPSG:4326",
+    "grid_degrees": {
+      "low": 1.0,
+      "mid": 0.5,
+      "high": 0.25
+    },
+    "source_csv_rows": {
+      "commercial_rows": 114334,
+      "passenger_rows": 4722,
+      "oil_gas_rows": 3033
+    },
+    "output_features": {
+      "density_low": 18775,
+      "density_mid": 48285,
+      "density_high": 115558,
+      "hotspots": 12244
+    },
+    "bounds": {
+      "west": -180.0,
+      "south": -85.0,
+      "east": 180.0,
+      "north": 85.0
+    }
+  },
+  "config_flags": {
+    "renderWorldCopies_false": true,
+    "maxBounds_present": true,
+    "smooth_zoom_tuning": true,
+    "heatmap_layer_present": true,
+    "continuous_gradient_present": true,
+    "cluster_source_present": true,
+    "multiscale_switching_present": true
+  },
+  "file_sizes_mb": {
+    "density_low": 2.482,
+    "density_mid": 6.442,
+    "density_high": 15.583,
+    "hotspots": 1.815
+  }
+}

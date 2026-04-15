@@ -1,0 +1,105 @@
+{
+  "visual_metrics": [
+    {
+      "file": "_C__DRIVE_D_PythonProject_marine-silk-road_media_shipping_heatmap_categories.html.png",
+      "width": 2242,
+      "height": 1799,
+      "left_right_diff": 6.929650783538818,
+      "top_bottom_diff": 24.73331069946289,
+      "tile_vertical_contrast_mean": 1.465768039226532,
+      "tile_horizontal_contrast_mean": 2.2578480413981845
+    },
+    {
+      "file": "_C__DRIVE_D_PythonProject_marine-silk-road_media_shipping_heatmap_combined.html.png",
+      "width": 2242,
+      "height": 1799,
+      "left_right_diff": 48.904117584228516,
+      "top_bottom_diff": 64.91116333007812,
+      "tile_vertical_contrast_mean": 1.8120251893997192,
+      "tile_horizontal_contrast_mean": 2.5257423434938704
+    },
+    {
+      "file": "_C__DRIVE_D_PythonProject_marine-silk-road_media_shipping_hotspots.html.png",
+      "width": 2242,
+      "height": 1799,
+      "left_right_diff": 7.384051322937012,
+      "top_bottom_diff": 176.8214111328125,
+      "tile_vertical_contrast_mean": 1.3655966334044933,
+      "tile_horizontal_contrast_mean": 2.000148683786392
+    }
+  ],
+  "csv_metrics": [
+    {
+      "file": "traffic_commercial_world.csv",
+      "rows": 114334,
+      "lat_min": -78.1224,
+      "lat_max": 84.8776,
+      "lon_min": -179.8903,
+      "lon_max": 179.8597,
+      "invalid_lat_rows": 0,
+      "invalid_lon_rows": 0,
+      "missing_rows": 0,
+      "density_min": 1.0,
+      "density_max": 42052883.0,
+      "intensity_min": 0.301,
+      "intensity_max": 7.6238,
+      "intensity_p95": 7.083334999999999,
+      "intensity_p99": 7.3871009999999995
+    },
+    {
+      "file": "traffic_passenger_world.csv",
+      "rows": 4722,
+      "lat_min": -64.8724,
+      "lat_max": 79.6276,
+      "lon_min": -175.1403,
+      "lon_max": 179.8597,
+      "invalid_lat_rows": 0,
+      "invalid_lon_rows": 0,
+      "missing_rows": 0,
+      "density_min": 1.0,
+      "density_max": 327.0,
+      "intensity_min": 0.301,
+      "intensity_max": 2.5159,
+      "intensity_p95": 1.2304,
+      "intensity_p99": 1.6532
+    },
+    {
+      "file": "traffic_oil_gas_world.csv",
+      "rows": 3033,
+      "lat_min": -64.8724,
+      "lat_max": 77.1276,
+      "lon_min": -160.8903,
+      "lon_max": 163.6097,
+      "invalid_lat_rows": 0,
+      "invalid_lon_rows": 0,
+      "missing_rows": 0,
+      "density_min": 1.0,
+      "density_max": 683164.0,
+      "intensity_min": 0.301,
+      "intensity_max": 5.8345,
+      "intensity_p95": 5.4436800000000005,
+      "intensity_p99": 5.650399999999999
+    },
+    {
+      "file": "traffic_combined_hotspots.csv",
+      "rows": 12244,
+      "lat_min": -52.3724,
+      "lat_max": 80.6276,
+      "lon_min": -179.6403,
+      "lon_max": 179.8597,
+      "invalid_lat_rows": 0,
+      "invalid_lon_rows": 0,
+      "missing_rows": 0,
+      "density_min": 9.0,
+      "density_max": 42052883.0,
+      "intensity_min": 1.0,
+      "intensity_max": 7.6238,
+      "intensity_p95": 7.441185,
+      "intensity_p99": 7.534914
+    }
+  ],
+  "artifact_sizes_mb": {
+    "advanced_html": 5.23,
+    "combined_html": 3.14
+  }
+}

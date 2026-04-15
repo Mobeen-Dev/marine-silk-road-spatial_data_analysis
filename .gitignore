@@ -5,3 +5,6 @@ venv
 *.png
 *.jpg
 *.pdf
+
+analysis_outputs/*.csv
+webapp/data/

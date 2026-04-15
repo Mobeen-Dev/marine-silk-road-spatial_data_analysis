@@ -1,0 +1,86 @@
+html,
+body,
+#map {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.panel {
+  position: absolute;
+  z-index: 10;
+  top: 12px;
+  left: 12px;
+  width: 320px;
+  max-height: calc(100% - 24px);
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d8dee4;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(18, 23, 31, 0.16);
+  padding: 14px;
+  color: #1f2937;
+}
+
+.panel h1 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+}
+
+.panel .subtitle {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.panel h2 {
+  margin: 12px 0 8px 0;
+  font-size: 13px;
+}
+
+.panel label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.label {
+  color: #4b5563;
+}
+
+.value {
+  font-weight: 600;
+  color: #111827;
+}
+
+.gradient {
+  height: 12px;
+  border-radius: 10px;
+  border: 1px solid #c7d1db;
+  background: linear-gradient(
+    to right,
+    #253494 0%,
+    #2c7fb8 20%,
+    #41b6c4 40%,
+    #a1dab4 60%,
+    #fecc5c 80%,
+    #e31a1c 100%
+  );
+}
+
+.legendLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #4b5563;
+}
