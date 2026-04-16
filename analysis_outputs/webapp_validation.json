@@ -58,7 +58,7 @@
   },
   "config_flags": {
     "renderWorldCopies_false": true,
-    "maxBounds_present": true,
+    "maxBounds_present": false,
     "smooth_zoom_tuning": true,
     "heatmap_layer_present": true,
     "continuous_gradient_present": true,

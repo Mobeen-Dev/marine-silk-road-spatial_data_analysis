@@ -5,11 +5,6 @@
  * 4) Readability: continuous heat gradient + clustered hotspots + category filters.
  */
 
-const WORLD_BOUNDS = [
-  [-180, -85],
-  [180, 85]
-];
-
 const DATA_PATHS = {
   low: "./data/density_low.geojson",
   mid: "./data/density_mid.geojson",
@@ -22,6 +17,12 @@ const RESOLUTION_THRESHOLDS = {
   midMaxZoom: 5.5
 };
 
+const RESOLUTION_GRID = {
+  low: "1.0°",
+  mid: "0.5°",
+  high: "0.25°"
+};
+
 const state = {
   datasets: {
     low: null,
@@ -31,6 +32,23 @@ const state = {
   },
   currentResolution: null,
   categoryFilters: ["commercial", "passenger", "oil_gas"]
+};
+
+const ui = {
+  panel: document.getElementById("controlPanel"),
+  panelMinimizeBtn: document.getElementById("panelMinimizeBtn"),
+  panelCloseBtn: document.getElementById("panelCloseBtn"),
+  panelToggleBtn: document.getElementById("panelToggleBtn"),
+  zoomValue: document.getElementById("zoomValue"),
+  resolutionValue: document.getElementById("resolutionValue"),
+  centerValue: document.getElementById("centerValue"),
+  statusValue: document.getElementById("statusValue"),
+  toggleHeat: document.getElementById("toggleHeat"),
+  toggleCluster: document.getElementById("toggleCluster"),
+  toggleHotspots: document.getElementById("toggleHotspots"),
+  catCommercial: document.getElementById("catCommercial"),
+  catPassenger: document.getElementById("catPassenger"),
+  catOilGas: document.getElementById("catOilGas")
 };
 
 const map = new maplibregl.Map({
@@ -67,10 +85,9 @@ const map = new maplibregl.Map({
     ]
   },
   center: [0, 20],
-  zoom: 2.35,
-  minZoom: 2.0,
-  maxZoom: 9.5,
-  maxBounds: WORLD_BOUNDS,
+  zoom: 2.6,
+  minZoom: 0.5,
+  maxZoom: 10.0,
   renderWorldCopies: false,
   antialias: true,
   cooperativeGestures: false,
@@ -98,6 +115,18 @@ function getResolutionLabel(resolution) {
   return "0.25 degree grid (detailed)";
 }
 
+function setStatus(message, isError = false) {
+  if (!ui.statusValue) return;
+  ui.statusValue.textContent = message;
+  ui.statusValue.style.color = isError ? "#b91c1c" : "#0f766e";
+}
+
+function updateCenterLabel() {
+  if (!ui.centerValue) return;
+  const center = map.getCenter();
+  ui.centerValue.textContent = `${center.lat.toFixed(2)}°, ${center.lng.toFixed(2)}°`;
+}
+
 function applyHotspotCategoryFilter() {
   const filterValues = state.categoryFilters;
   if (!map.getLayer("hotspot-points")) return;
@@ -105,18 +134,25 @@ function applyHotspotCategoryFilter() {
 }
 
 function updateDensitySourceForZoom() {
-  if (!map.getSource("density")) return;
   const zoom = map.getZoom();
   const newRes = getResolutionFromZoom(zoom);
+  if (ui.resolutionValue) {
+    ui.resolutionValue.textContent = `${RESOLUTION_GRID[newRes]} grid`;
+  }
+
+  if (!map.getSource("density") || !state.datasets[newRes]) {
+    state.currentResolution = newRes;
+    return;
+  }
   if (newRes === state.currentResolution) return;
 
   map.getSource("density").setData(state.datasets[newRes]);
   state.currentResolution = newRes;
-  document.getElementById("resolutionValue").textContent = getResolutionLabel(newRes);
 }
 
 function updateZoomLabel() {
-  document.getElementById("zoomValue").textContent = map.getZoom().toFixed(2);
+  if (!ui.zoomValue) return;
+  ui.zoomValue.textContent = map.getZoom().toFixed(2);
 }
 
 function setLayerVisibility(layerId, isVisible) {
@@ -125,29 +161,51 @@ function setLayerVisibility(layerId, isVisible) {
 }
 
 function wireControls() {
-  document.getElementById("toggleHeat").addEventListener("change", (e) => {
+  ui.toggleHeat.addEventListener("change", (e) => {
     setLayerVisibility("density-heat", e.target.checked);
   });
-  document.getElementById("toggleCluster").addEventListener("change", (e) => {
+  ui.toggleCluster.addEventListener("change", (e) => {
     setLayerVisibility("hotspot-clusters", e.target.checked);
     setLayerVisibility("hotspot-cluster-count", e.target.checked);
   });
-  document.getElementById("toggleHotspots").addEventListener("change", (e) => {
+  ui.toggleHotspots.addEventListener("change", (e) => {
     setLayerVisibility("hotspot-points", e.target.checked);
   });
 
   function onCategoryToggle() {
     const selected = [];
-    if (document.getElementById("catCommercial").checked) selected.push("commercial");
-    if (document.getElementById("catPassenger").checked) selected.push("passenger");
-    if (document.getElementById("catOilGas").checked) selected.push("oil_gas");
+    if (ui.catCommercial.checked) selected.push("commercial");
+    if (ui.catPassenger.checked) selected.push("passenger");
+    if (ui.catOilGas.checked) selected.push("oil_gas");
     state.categoryFilters = selected;
     applyHotspotCategoryFilter();
   }
 
-  document.getElementById("catCommercial").addEventListener("change", onCategoryToggle);
-  document.getElementById("catPassenger").addEventListener("change", onCategoryToggle);
-  document.getElementById("catOilGas").addEventListener("change", onCategoryToggle);
+  ui.catCommercial.addEventListener("change", onCategoryToggle);
+  ui.catPassenger.addEventListener("change", onCategoryToggle);
+  ui.catOilGas.addEventListener("change", onCategoryToggle);
+
+  ui.panelMinimizeBtn.addEventListener("click", () => {
+    ui.panel.classList.toggle("collapsed");
+    ui.panelMinimizeBtn.textContent = ui.panel.classList.contains("collapsed") ? "+" : "-";
+  });
+
+  ui.panelCloseBtn.addEventListener("click", () => {
+    ui.panel.classList.add("hidden");
+    ui.panelToggleBtn.classList.remove("hidden");
+  });
+
+  ui.panelToggleBtn.addEventListener("click", () => {
+    ui.panel.classList.remove("hidden");
+    ui.panelToggleBtn.classList.add("hidden");
+  });
+
+  ui.panel.addEventListener("mouseenter", () => {
+    ui.panel.classList.remove("panel-faded");
+  });
+  ui.panel.addEventListener("mouseleave", () => {
+    ui.panel.classList.add("panel-faded");
+  });
 }
 
 async function loadGeoJson(path) {
@@ -187,25 +245,25 @@ async function initLayers() {
         "interpolate",
         ["linear"],
         ["zoom"],
-        2, 0.8,
-        5, 1.1,
-        8, 1.3
+        2, 0.72,
+        5, 0.95,
+        8, 1.18
       ],
       "heatmap-radius": [
         "interpolate",
         ["linear"],
         ["zoom"],
-        2, 14,
-        4, 22,
-        6, 32,
-        8, 42
+        2, 16,
+        4, 24,
+        6, 35,
+        8, 46
       ],
       "heatmap-opacity": [
         "interpolate",
         ["linear"],
         ["zoom"],
-        2, 0.82,
-        8, 0.72
+        2, 0.76,
+        8, 0.68
       ],
       "heatmap-color": [
         "interpolate",
@@ -227,7 +285,7 @@ async function initLayers() {
     data: state.datasets.hotspots,
     cluster: true,
     clusterRadius: 46,
-    clusterMaxZoom: 6
+    clusterMaxZoom: 7
   });
 
   map.addLayer({
@@ -333,9 +391,15 @@ async function initLayers() {
   });
 
   wireControls();
+  setLayerVisibility("hotspot-points", ui.toggleHotspots.checked);
+  setLayerVisibility("hotspot-clusters", ui.toggleCluster.checked);
+  setLayerVisibility("hotspot-cluster-count", ui.toggleCluster.checked);
+  setLayerVisibility("density-heat", ui.toggleHeat.checked);
   updateZoomLabel();
-  document.getElementById("resolutionValue").textContent = getResolutionLabel(initialRes);
+  updateCenterLabel();
+  ui.resolutionValue.textContent = `${RESOLUTION_GRID[initialRes]} grid`;
   applyHotspotCategoryFilter();
+  setStatus("Ready");
 }
 
 let zoomTicking = false;
@@ -345,21 +409,27 @@ function onZoomFrame() {
   requestAnimationFrame(() => {
     updateZoomLabel();
     updateDensitySourceForZoom();
+    updateCenterLabel();
     zoomTicking = false;
   });
 }
 
 map.on("zoom", onZoomFrame);
+map.on("move", onZoomFrame);
 map.on("zoomend", () => {
   updateZoomLabel();
   updateDensitySourceForZoom();
+  updateCenterLabel();
 });
 
 map.on("load", () => {
+  updateZoomLabel();
+  updateDensitySourceForZoom();
+  updateCenterLabel();
+  setStatus("Loading data...");
   initLayers().catch((err) => {
-    // Visible failure helps debugging data path and server issues.
-    // eslint-disable-next-line no-console
+    // Visible failure helps debugging data path and local server issues.
     console.error(err);
-    alert(`Failed to initialize map layers: ${err.message}`);
+    setStatus("Data load failed. Start local server.", true);
   });
 });

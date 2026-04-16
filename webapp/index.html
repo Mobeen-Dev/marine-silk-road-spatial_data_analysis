@@ -14,11 +14,15 @@
 <body>
   <div id="map"></div>
 
-  <aside class="panel">
-    <h1>Global Marine Traffic</h1>
-    <p class="subtitle">
-      Seam-safe world view, smooth zoom, and multi-resolution density rendering.
-    </p>
+  <aside id="controlPanel" class="panel panel-faded">
+    <div class="panelHeader">
+      <h1>Global Marine Traffic</h1>
+      <div class="panelActions">
+        <button id="panelMinimizeBtn" title="Minimize panel">-</button>
+        <button id="panelCloseBtn" title="Hide panel">×</button>
+      </div>
+    </div>
+    <p class="subtitle">Seam-safe world view, smooth zoom, and multi-resolution density rendering.</p>
 
     <div class="row">
       <span class="label">Zoom</span>
@@ -28,12 +32,20 @@
       <span class="label">Resolution</span>
       <span id="resolutionValue" class="value">-</span>
     </div>
+    <div class="row">
+      <span class="label">Center</span>
+      <span id="centerValue" class="value">-</span>
+    </div>
+    <div class="row">
+      <span class="label">Status</span>
+      <span id="statusValue" class="value">Loading...</span>
+    </div>
 
     <section>
       <h2>Layers</h2>
       <label><input id="toggleHeat" type="checkbox" checked /> Density heatmap</label>
       <label><input id="toggleCluster" type="checkbox" checked /> Hotspot clusters</label>
-      <label><input id="toggleHotspots" type="checkbox" checked /> Hotspot points</label>
+      <label><input id="toggleHotspots" type="checkbox" /> Hotspot points</label>
     </section>
 
     <section>
@@ -52,6 +64,8 @@
       </div>
     </section>
   </aside>
+
+  <button id="panelToggleBtn" class="panelToggle hidden" title="Show controls">Show controls</button>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="./app.js"></script>
