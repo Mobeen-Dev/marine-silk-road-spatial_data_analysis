@@ -6,69 +6,127 @@
     "webapp\\data\\density_low.geojson": true,
     "webapp\\data\\density_mid.geojson": true,
     "webapp\\data\\density_high.geojson": true,
-    "webapp\\data\\hotspots.geojson": true,
+    "webapp\\data\\hotspots_commercial.geojson": true,
+    "webapp\\data\\hotspots_oil_gas.geojson": true,
+    "webapp\\data\\hotspots_passenger.geojson": true,
+    "webapp\\data\\filter_index.json": true,
     "webapp\\data\\metadata.json": true
   },
   "geojson_checks": {
     "density_low": {
-      "feature_count": 18775,
+      "feature_count": 35404,
       "invalid_lat": 0,
       "invalid_lon": 0
     },
     "density_mid": {
-      "feature_count": 48285,
+      "feature_count": 93557,
       "invalid_lat": 0,
       "invalid_lon": 0
     },
     "density_high": {
-      "feature_count": 115558,
+      "feature_count": 237647,
       "invalid_lat": 0,
       "invalid_lon": 0
     },
-    "hotspots": {
-      "feature_count": 12244,
+    "hotspots_commercial": {
+      "feature_count": 11434,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "hotspots_oil_gas": {
+      "feature_count": 304,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "hotspots_passenger": {
+      "feature_count": 506,
       "invalid_lat": 0,
       "invalid_lon": 0
     }
   },
+  "top_category_values_sample": [
+    "commercial",
+    "global",
+    "oil_gas",
+    "passenger"
+  ],
+  "filter_index_summary": {
+    "top_categories": [
+      "global",
+      "commercial",
+      "oil_gas",
+      "passenger"
+    ],
+    "commercial_subcategories": 43,
+    "oil_gas_subcategories": 5,
+    "passenger_subcategories": 2
+  },
   "metadata": {
     "crs": "EPSG:4326",
+    "bounds": {
+      "west": -180.0,
+      "south": -85.0,
+      "east": 180.0,
+      "north": 85.0
+    },
     "grid_degrees": {
       "low": 1.0,
       "mid": 0.5,
       "high": 0.25
     },
     "source_csv_rows": {
-      "commercial_rows": 114334,
-      "passenger_rows": 4722,
-      "oil_gas_rows": 3033
+      "commercial": 114334,
+      "oil_gas": 3033,
+      "passenger": 4722,
+      "global": 122089
     },
-    "output_features": {
-      "density_low": 18775,
-      "density_mid": 48285,
-      "density_high": 115558,
-      "hotspots": 12244
+    "density_feature_counts_by_resolution": {
+      "low": {
+        "global": 16672,
+        "commercial": 16625,
+        "oil_gas": 899,
+        "passenger": 1208
+      },
+      "mid": {
+        "global": 41638,
+        "commercial": 47974,
+        "oil_gas": 1563,
+        "passenger": 2382
+      },
+      "high": {
+        "global": 115558,
+        "commercial": 114334,
+        "oil_gas": 3033,
+        "passenger": 4722
+      }
     },
-    "bounds": {
-      "west": -180.0,
-      "south": -85.0,
-      "east": 180.0,
-      "north": 85.0
-    }
+    "hotspot_feature_counts": {
+      "commercial": 11434,
+      "oil_gas": 304,
+      "passenger": 506
+    },
+    "top_categories": [
+      "global",
+      "commercial",
+      "oil_gas",
+      "passenger"
+    ]
   },
   "config_flags": {
     "renderWorldCopies_false": true,
-    "maxBounds_present": false,
+    "axis_lock_removed": true,
     "smooth_zoom_tuning": true,
-    "heatmap_layer_present": true,
-    "continuous_gradient_present": true,
-    "cluster_source_present": true,
+    "heatmap_layers_present": true,
+    "hierarchical_controls_present": true,
+    "modal_present": true,
     "multiscale_switching_present": true
   },
   "file_sizes_mb": {
-    "density_low": 2.482,
-    "density_mid": 6.442,
-    "density_high": 15.583,
-    "hotspots": 1.815
+    "density_low": 6.877,
+    "density_mid": 18.309,
+    "density_high": 46.769,
+    "hotspots_commercial": 2.19,
+    "hotspots_oil_gas": 0.056,
+    "hotspots_passenger": 0.093
   }
 }
