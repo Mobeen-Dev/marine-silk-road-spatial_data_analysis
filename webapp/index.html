@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Global Marine Traffic - Smooth Density Map</title>
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
-  />
+  <title>Global Marine Traffic Explorer</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
@@ -16,56 +12,59 @@
 
   <aside id="controlPanel" class="panel panel-faded">
     <div class="panelHeader">
-      <h1>Global Marine Traffic</h1>
+      <h1>Marine Traffic Explorer</h1>
       <div class="panelActions">
-        <button id="panelMinimizeBtn" title="Minimize panel">-</button>
-        <button id="panelCloseBtn" title="Hide panel">×</button>
+        <button id="panelMinimizeBtn" title="Minimize">-</button>
+        <button id="panelCloseBtn" title="Hide controls">×</button>
       </div>
     </div>
-    <p class="subtitle">Seam-safe world view, smooth zoom, and multi-resolution density rendering.</p>
 
-    <div class="row">
-      <span class="label">Zoom</span>
-      <span id="zoomValue" class="value">-</span>
-    </div>
-    <div class="row">
-      <span class="label">Resolution</span>
-      <span id="resolutionValue" class="value">-</span>
-    </div>
-    <div class="row">
-      <span class="label">Center</span>
-      <span id="centerValue" class="value">-</span>
-    </div>
-    <div class="row">
-      <span class="label">Status</span>
-      <span id="statusValue" class="value">Loading...</span>
-    </div>
+    <p class="subtitle">Hierarchical category filters + multiscale density rendering.</p>
+
+    <div class="row"><span class="label">Zoom</span><span id="zoomValue" class="value">-</span></div>
+    <div class="row"><span class="label">Resolution</span><span id="resolutionValue" class="value">-</span></div>
+    <div class="row"><span class="label">Center</span><span id="centerValue" class="value">-</span></div>
+    <div class="row"><span class="label">Status</span><span id="statusValue" class="value">Loading...</span></div>
 
     <section>
-      <h2>Layers</h2>
-      <label><input id="toggleHeat" type="checkbox" checked /> Density heatmap</label>
-      <label><input id="toggleCluster" type="checkbox" checked /> Hotspot clusters</label>
-      <label><input id="toggleHotspots" type="checkbox" /> Hotspot points</label>
+      <h2>Top-level datasets</h2>
+      <div id="topCategoryList" class="categoryList"></div>
+      <p id="subcategoryHint" class="hint hidden"></p>
     </section>
 
     <section>
-      <h2>Hotspot categories</h2>
-      <label><input id="catCommercial" type="checkbox" checked /> Commercial</label>
-      <label><input id="catPassenger" type="checkbox" checked /> Passenger</label>
-      <label><input id="catOilGas" type="checkbox" checked /> Oil &amp; Gas</label>
+      <h2>Rendering</h2>
+      <label><input id="toggleHeat" type="checkbox" checked /> Density heatmap</label>
+      <label><input id="toggleClusters" type="checkbox" checked /> Hotspot clusters</label>
+      <label><input id="togglePoints" type="checkbox" /> Hotspot points</label>
+      <button id="fitWorldBtn" class="btnSecondary inlineAction" type="button">Fit whole world</button>
     </section>
 
     <section>
       <h2>Density gradient</h2>
       <div class="gradient"></div>
-      <div class="legendLabels">
-        <span>Low</span>
-        <span>High</span>
-      </div>
+      <div class="legendLabels"><span>Low</span><span>High</span></div>
     </section>
   </aside>
 
   <button id="panelToggleBtn" class="panelToggle hidden" title="Show controls">Show controls</button>
+
+  <div id="refineModalBackdrop" class="modalBackdrop hidden"></div>
+  <div id="refineModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="refineModalTitle">
+    <div class="modalHeader">
+      <h3 id="refineModalTitle">Refine Selection</h3>
+    </div>
+    <p id="refineModalSubtitle" class="modalSubtitle"></p>
+    <div class="modalActionsTop">
+      <button id="modalSelectAllBtn" class="btnSecondary" type="button">Select all</button>
+      <button id="modalSelectNoneBtn" class="btnSecondary" type="button">Select none</button>
+    </div>
+    <div id="refineModalList" class="modalList"></div>
+    <div class="modalActionsBottom">
+      <button id="modalCancelBtn" class="btnSecondary" type="button">Cancel</button>
+      <button id="modalApplyBtn" class="btnPrimary" type="button">Apply</button>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script src="./app.js"></script>
