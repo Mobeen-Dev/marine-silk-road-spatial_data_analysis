@@ -38,6 +38,7 @@ def main() -> None:
         DATA / "hotspots_commercial.geojson",
         DATA / "hotspots_oil_gas.geojson",
         DATA / "hotspots_passenger.geojson",
+        DATA / "clusters.geojson",
         DATA / "filter_index.json",
         DATA / "metadata.json",
     ]
@@ -49,6 +50,7 @@ def main() -> None:
     hs_commercial = load_json(DATA / "hotspots_commercial.geojson")
     hs_oil_gas = load_json(DATA / "hotspots_oil_gas.geojson")
     hs_passenger = load_json(DATA / "hotspots_passenger.geojson")
+    clusters = load_json(DATA / "clusters.geojson")
     filter_index = load_json(DATA / "filter_index.json")
     metadata = load_json(DATA / "metadata.json")
 
@@ -63,6 +65,8 @@ def main() -> None:
         "hierarchical_controls_present": ("topCategoryList" in index_html and ".btnRefine" in styles_css),
         "modal_present": "refineModal" in index_html and "modalApplyBtn" in index_html,
         "multiscale_switching_present": "getResolutionFromZoom" in app_js,
+        "dbscan_toggle_present": "toggleDbscanClusters" in app_js and "toggleDbscanClusters" in index_html,
+        "dbscan_layer_present": "dbscan-clusters" in app_js and "dbscan-clusters-src" in app_js,
     }
 
     top_category_values = set()
@@ -79,6 +83,7 @@ def main() -> None:
             "hotspots_commercial": feature_range_checks(hs_commercial),
             "hotspots_oil_gas": feature_range_checks(hs_oil_gas),
             "hotspots_passenger": feature_range_checks(hs_passenger),
+            "clusters": feature_range_checks(clusters),
         },
         "top_category_values_sample": sorted(v for v in top_category_values if v is not None),
         "filter_index_summary": {

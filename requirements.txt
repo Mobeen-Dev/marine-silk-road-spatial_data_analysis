@@ -1,0 +1,14 @@
+numpy>=2.2,<3
+pandas>=2.2,<3
+rasterio>=1.4,<2
+matplotlib>=3.10,<4
+Pillow>=11.0,<12
+geopandas>=1.1,<2
+shapely>=2.1,<3
+scipy>=1.15,<2
+scikit-learn>=1.7,<2
+libpysal>=4.13,<5
+esda>=2.8,<3
+pointpats>=2.5,<3
+statsmodels>=0.14,<1
+spreg>=1.8,<2

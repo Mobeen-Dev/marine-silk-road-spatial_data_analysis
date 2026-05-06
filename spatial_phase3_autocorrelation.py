@@ -1,0 +1,196 @@
+from __future__ import annotations
+
+import json
+
+import geopandas as gpd
+import matplotlib
+import numpy as np
+import pandas as pd
+from esda import Moran, Moran_Local
+from libpysal.weights import KNN
+
+from spatial_analysis_common import (
+    ANALYSIS_DIR,
+    PORT_ANCHORS,
+    STRAIT_ANCHORS,
+    aggregate_grid,
+    ensure_country_boundaries,
+    ensure_directories,
+    nearest_anchor_distance_km,
+    read_category_frames,
+    with_global,
+    write_json,
+)
+
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+
+def local_label(q_value: int, p_value: float) -> str:
+    if p_value > 0.05:
+        return "NS"
+    return {1: "HH", 2: "LH", 3: "LL", 4: "HL"}.get(int(q_value), "NS")
+
+
+def build_weights(coords: np.ndarray) -> KNN:
+    w = KNN.from_array(coords, k=8)
+    w.transform = "r"
+    return w
+
+
+def distance_to_coast_km(lon: np.ndarray, lat: np.ndarray) -> np.ndarray:
+    countries = ensure_country_boundaries().to_crs("EPSG:6933")
+    coast = countries.geometry.boundary.union_all()
+    points = gpd.GeoSeries(gpd.points_from_xy(lon, lat), crs="EPSG:4326").to_crs("EPSG:6933")
+    distances_m = points.distance(coast)
+    return distances_m.to_numpy(dtype=float) / 1000.0
+
+
+def write_moran_scatter(x: np.ndarray, lag_x: np.ndarray, path):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.scatter(x, lag_x, s=8, alpha=0.35, color="#0f766e")
+    z = np.polyfit(x, lag_x, 1)
+    p = np.poly1d(z)
+    x_line = np.linspace(x.min(), x.max(), 200)
+    ax.plot(x_line, p(x_line), color="#b91c1c", linewidth=2)
+    ax.axhline(np.mean(lag_x), color="#64748b", linestyle="--", linewidth=1)
+    ax.axvline(np.mean(x), color="#64748b", linestyle="--", linewidth=1)
+    ax.set_title("Phase 3 Moran Scatterplot")
+    ax.set_xlabel("log1p(density)")
+    ax.set_ylabel("Spatial lag of log1p(density)")
+    ax.grid(alpha=0.2)
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
+def main() -> None:
+    ensure_directories()
+    frames = with_global(read_category_frames())
+    grid = aggregate_grid(frames["global"], grid_deg=1.0).reset_index(drop=True)
+
+    coords = grid[["lon_bin", "lat_bin"]].to_numpy(dtype=float)
+    y = np.log1p(grid["density_sum"].to_numpy(dtype=float))
+
+    w = build_weights(coords)
+    moran = Moran(y, w, permutations=999)
+    local = Moran_Local(y, w, permutations=999)
+
+    grid["log_density"] = y
+    grid["moran_local_i"] = local.Is
+    grid["moran_local_p"] = local.p_sim
+    grid["moran_quadrant"] = local.q
+    grid["lisa_cluster"] = [
+        local_label(q, p) for q, p in zip(grid["moran_quadrant"], grid["moran_local_p"])
+    ]
+
+    lag_y = w.sparse @ y
+    grid["spatial_lag_log_density"] = lag_y
+
+    grid["distance_to_port_km"] = nearest_anchor_distance_km(
+        grid["lon_bin"].to_numpy(dtype=float),
+        grid["lat_bin"].to_numpy(dtype=float),
+        PORT_ANCHORS,
+    )
+    grid["distance_to_strait_km"] = nearest_anchor_distance_km(
+        grid["lon_bin"].to_numpy(dtype=float),
+        grid["lat_bin"].to_numpy(dtype=float),
+        STRAIT_ANCHORS,
+    )
+    grid["distance_to_coast_km"] = distance_to_coast_km(
+        grid["lon_bin"].to_numpy(dtype=float),
+        grid["lat_bin"].to_numpy(dtype=float),
+    )
+
+    engineered_cols = [
+        "lat_bin",
+        "lon_bin",
+        "density_sum",
+        "density_mean",
+        "intensity_sum",
+        "intensity_mean",
+        "points",
+        "log_density",
+        "spatial_lag_log_density",
+        "distance_to_port_km",
+        "distance_to_strait_km",
+        "distance_to_coast_km",
+        "moran_local_i",
+        "moran_local_p",
+        "moran_quadrant",
+        "lisa_cluster",
+    ]
+
+    features_csv = ANALYSIS_DIR / "phase3_engineered_features.csv"
+    grid[engineered_cols].to_csv(features_csv, index=False)
+
+    lisa_gdf = gpd.GeoDataFrame(
+        grid[engineered_cols],
+        geometry=gpd.points_from_xy(grid["lon_bin"], grid["lat_bin"]),
+        crs="EPSG:4326",
+    )
+    lisa_geojson = ANALYSIS_DIR / "phase3_lisa.geojson"
+    lisa_gdf.to_file(lisa_geojson, driver="GeoJSON")
+
+    scatter_png = ANALYSIS_DIR / "phase3_moran_scatter.png"
+    write_moran_scatter(y, lag_y, scatter_png)
+
+    quadrant_counts = grid["lisa_cluster"].value_counts().to_dict()
+    summary = {
+        "global_moran_i": float(moran.I),
+        "global_moran_expected": float(moran.EI),
+        "global_moran_p_sim": float(moran.p_sim),
+        "global_moran_z_sim": float(moran.z_sim),
+        "lisa_cluster_counts": {str(k): int(v) for k, v in quadrant_counts.items()},
+        "rows": int(len(grid)),
+    }
+    write_json(ANALYSIS_DIR / "phase3_autocorrelation.json", summary)
+
+    notebook = {
+        "cells": [
+            {
+                "cell_type": "markdown",
+                "metadata": {},
+                "source": [
+                    "# Phase 3 - Spatial Autocorrelation\n",
+                    "\n",
+                    "Outputs generated by `spatial_phase3_autocorrelation.py`:\n",
+                    "- `phase3_autocorrelation.json`\n",
+                    "- `phase3_lisa.geojson`\n",
+                    "- `phase3_moran_scatter.png`\n",
+                ],
+            },
+            {
+                "cell_type": "code",
+                "execution_count": None,
+                "metadata": {},
+                "outputs": [],
+                "source": [
+                    "import json\n",
+                    f"summary = json.load(open(r'{(ANALYSIS_DIR / 'phase3_autocorrelation.json').as_posix()}', 'r', encoding='utf-8'))\n",
+                    "summary\n",
+                ],
+            },
+        ],
+        "metadata": {
+            "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+            "language_info": {"name": "python", "version": "3.x"},
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5,
+    }
+    (ANALYSIS_DIR / "autocorrelation.ipynb").write_text(
+        json.dumps(notebook, indent=2), encoding="utf-8"
+    )
+
+    print(f"Wrote: {features_csv}")
+    print(f"Wrote: {lisa_geojson}")
+    print(f"Wrote: {scatter_png}")
+    print(f"Wrote: {ANALYSIS_DIR / 'phase3_autocorrelation.json'}")
+    print(f"Wrote: {ANALYSIS_DIR / 'autocorrelation.ipynb'}")
+
+
+if __name__ == "__main__":
+    main()
+
