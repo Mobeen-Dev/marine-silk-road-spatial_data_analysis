@@ -8,3 +8,21 @@ venv
 
 analysis_outputs/*.csv
 webapp/data/
+analysis_outputs/autocorrelation.ipynb
+analysis_outputs/esda_report.ipynb
+analysis_outputs/phase1_country_choropleth.geojson
+analysis_outputs/phase1_data_structure.json
+analysis_outputs/phase1_summary_statistics.json
+analysis_outputs/phase2_clusters.geojson
+analysis_outputs/phase2_hotspot_points.geojson
+analysis_outputs/phase2_hotspot_points.gpkg
+analysis_outputs/phase2_kde_surface.geojson
+analysis_outputs/phase2_ppa_metrics.json
+analysis_outputs/phase3_autocorrelation.json
+analysis_outputs/phase3_lisa.geojson
+analysis_outputs/phase4_interpretation.txt
+analysis_outputs/phase4_regression_summary.json
+analysis_outputs/reference_countries.geojson
+analysis_outputs/spatial_regression.ipynb
+analysis_outputs/webapp_validation.json
+analysis_outputs/webapp_validation.json

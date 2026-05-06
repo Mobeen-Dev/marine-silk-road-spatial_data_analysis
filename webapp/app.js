@@ -19,6 +19,7 @@ const DATA_PATHS = {
   hotspotsCommercial: "./data/hotspots_commercial.geojson",
   hotspotsOilGas: "./data/hotspots_oil_gas.geojson",
   hotspotsPassenger: "./data/hotspots_passenger.geojson",
+  dbscanClusters: "./data/clusters.geojson",
   filterIndex: "./data/filter_index.json",
   metadata: "./data/metadata.json"
 };
@@ -42,6 +43,7 @@ const RESOLUTION_LABELS = {
 const state = {
   datasets: { low: null, mid: null, high: null },
   hotspotDatasets: { commercial: null, oil_gas: null, passenger: null },
+  dbscanClusters: null,
   filterIndex: null,
   metadata: null,
   currentResolution: null,
@@ -72,6 +74,7 @@ const ui = {
   toggleHeat: document.getElementById("toggleHeat"),
   toggleClusters: document.getElementById("toggleClusters"),
   togglePoints: document.getElementById("togglePoints"),
+  toggleDbscanClusters: document.getElementById("toggleDbscanClusters"),
   fitWorldBtn: document.getElementById("fitWorldBtn"),
   modalBackdrop: document.getElementById("refineModalBackdrop"),
   modal: document.getElementById("refineModal"),
@@ -134,10 +137,6 @@ map.addControl(new maplibregl.NavigationControl({ visualizePitch: false }), "top
 function setStatus(message, isError = false) {
   ui.statusValue.textContent = message;
   ui.statusValue.style.color = isError ? "#b91c1c" : "#0f766e";
-}
-
-function isSubtypeGranular(category) {
-  return !!state.filterIndex?.subcategory_granularity_available?.[category];
 }
 
 function isSubtypeGranular(category) {
@@ -217,6 +216,20 @@ function applyHotspotFilters() {
   }
 }
 
+function applyDbscanVisibility() {
+  if (!map.getLayer("dbscan-clusters")) return;
+  map.setLayoutProperty(
+    "dbscan-clusters",
+    "visibility",
+    ui.toggleDbscanClusters.checked ? "visible" : "none"
+  );
+  map.setLayoutProperty(
+    "dbscan-noise",
+    "visibility",
+    ui.toggleDbscanClusters.checked ? "visible" : "none"
+  );
+}
+
 function updateCategorySummary(category) {
   const summaryNode = document.getElementById(`summary-${category}`);
   if (!summaryNode) return;
@@ -237,6 +250,7 @@ function updateCategorySummary(category) {
 function applyAllFilters() {
   applyDensityFilters();
   applyHotspotFilters();
+  applyDbscanVisibility();
   TOP_KEYS.forEach(updateCategorySummary);
 }
 
@@ -441,15 +455,19 @@ function wireRenderingToggles() {
   ui.toggleHeat.addEventListener("change", applyDensityFilters);
   ui.toggleClusters.addEventListener("change", applyHotspotFilters);
   ui.togglePoints.addEventListener("change", applyHotspotFilters);
+  ui.toggleDbscanClusters.addEventListener("change", applyDbscanVisibility);
   ui.fitWorldBtn.addEventListener("click", () => {
     fitWorldInFrame(true);
     setStatus("Fitted whole world");
   });
 }
 
-async function loadJson(path) {
+async function loadJson(path, optional = false) {
   const response = await fetch(path);
-  if (!response.ok) throw new Error(`Failed to load ${path}: ${response.status}`);
+  if (!response.ok) {
+    if (optional) return { type: "FeatureCollection", features: [] };
+    throw new Error(`Failed to load ${path}: ${response.status}`);
+  }
   return response.json();
 }
 
@@ -575,8 +593,63 @@ function addHotspotLayersForCategory(category) {
   });
 }
 
+function addDbscanClusterLayer() {
+  map.addSource("dbscan-clusters-src", {
+    type: "geojson",
+    data: state.dbscanClusters || { type: "FeatureCollection", features: [] }
+  });
+
+  map.addLayer({
+    id: "dbscan-clusters",
+    type: "circle",
+    source: "dbscan-clusters-src",
+    filter: [">=", ["to-number", ["get", "cluster_id"], -1], 0],
+    paint: {
+      "circle-color": [
+        "interpolate",
+        ["linear"],
+        ["to-number", ["get", "cluster_id"], 0],
+        0, "#1d4ed8",
+        8, "#0f766e",
+        16, "#b45309",
+        24, "#7c3aed",
+        32, "#be123c"
+      ],
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 2, 2.5, 8, 8.5],
+      "circle-opacity": 0.58,
+      "circle-stroke-color": "#ffffff",
+      "circle-stroke-width": 0.7
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.addLayer({
+    id: "dbscan-noise",
+    type: "circle",
+    source: "dbscan-clusters-src",
+    filter: ["<", ["to-number", ["get", "cluster_id"], -1], 0],
+    paint: {
+      "circle-color": "#334155",
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 2, 1.4, 8, 3.2],
+      "circle-opacity": 0.34
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.on("click", "dbscan-clusters", (e) => {
+    const feature = e.features?.[0];
+    if (!feature) return;
+    const p = feature.properties || {};
+    const html =
+      `<b>DBSCAN cluster:</b> ${Number(p.cluster_id)}<br>` +
+      `<b>Density sum:</b> ${Number(p.density_sum || 0).toLocaleString()}<br>` +
+      `<b>KDE score:</b> ${Number(p.kde_score_norm || 0).toFixed(3)}`;
+    new maplibregl.Popup().setLngLat(feature.geometry.coordinates).setHTML(html).addTo(map);
+  });
+}
+
 async function initializeData() {
-  const [low, mid, high, hsCommercial, hsOilGas, hsPassenger, filterIndex, metadata] =
+  const [low, mid, high, hsCommercial, hsOilGas, hsPassenger, dbscanClusters, filterIndex, metadata] =
     await Promise.all([
       loadJson(DATA_PATHS.low),
       loadJson(DATA_PATHS.mid),
@@ -584,6 +657,7 @@ async function initializeData() {
       loadJson(DATA_PATHS.hotspotsCommercial),
       loadJson(DATA_PATHS.hotspotsOilGas),
       loadJson(DATA_PATHS.hotspotsPassenger),
+      loadJson(DATA_PATHS.dbscanClusters, true),
       loadJson(DATA_PATHS.filterIndex),
       loadJson(DATA_PATHS.metadata)
     ]);
@@ -594,6 +668,7 @@ async function initializeData() {
   state.hotspotDatasets.commercial = hsCommercial;
   state.hotspotDatasets.oil_gas = hsOilGas;
   state.hotspotDatasets.passenger = hsPassenger;
+  state.dbscanClusters = dbscanClusters;
   state.filterIndex = filterIndex;
   state.metadata = metadata;
 
@@ -627,6 +702,7 @@ map.on("load", async () => {
     state.currentResolution = getResolutionFromZoom(map.getZoom());
     addDensityLayers();
     for (const category of HOTSPOT_KEYS) addHotspotLayersForCategory(category);
+    addDbscanClusterLayer();
 
     wirePanelBehavior();
     wireModalBehavior();

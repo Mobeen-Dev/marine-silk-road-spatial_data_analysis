@@ -88,6 +88,7 @@ SUBCATEGORIES = {
 
 RESOLUTION_GRIDS = {"low": 1.0, "mid": 0.5, "high": 0.25}
 HOTSPOT_FILE = ANALYSIS_DIR / "traffic_combined_hotspots.csv"
+CLUSTERS_FILE = DATA_DIR / "clusters.geojson"
 
 
 def wrap_longitude(series: pd.Series) -> pd.Series:
@@ -221,6 +222,10 @@ def main() -> None:
         write_json(DATA_DIR / f"hotspots_{category}.geojson", cat_geojson)
         hotspot_counts[category] = len(cat_geojson["features"])
 
+    if not CLUSTERS_FILE.exists():
+        write_json(CLUSTERS_FILE, {"type": "FeatureCollection", "features": []})
+    cluster_feature_count = len(json.loads(CLUSTERS_FILE.read_text(encoding="utf-8")).get("features", []))
+
     filter_index = {
         "top_categories": [
             {
@@ -267,6 +272,7 @@ def main() -> None:
         "source_csv_rows": source_rows,
         "density_feature_counts_by_resolution": feature_counts_by_res,
         "hotspot_feature_counts": hotspot_counts,
+        "dbscan_cluster_feature_count": cluster_feature_count,
         "top_categories": list(DATASET_CLASSES.keys()),
     }
     (DATA_DIR / "metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")

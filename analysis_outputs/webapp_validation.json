@@ -9,6 +9,7 @@
     "webapp\\data\\hotspots_commercial.geojson": true,
     "webapp\\data\\hotspots_oil_gas.geojson": true,
     "webapp\\data\\hotspots_passenger.geojson": true,
+    "webapp\\data\\clusters.geojson": true,
     "webapp\\data\\filter_index.json": true,
     "webapp\\data\\metadata.json": true
   },
@@ -40,6 +41,11 @@
     },
     "hotspots_passenger": {
       "feature_count": 506,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "clusters": {
+      "feature_count": 2415,
       "invalid_lat": 0,
       "invalid_lon": 0
     }
@@ -105,6 +111,7 @@
       "oil_gas": 304,
       "passenger": 506
     },
+    "dbscan_cluster_feature_count": 2415,
     "top_categories": [
       "global",
       "commercial",
@@ -119,7 +126,9 @@
     "heatmap_layers_present": true,
     "hierarchical_controls_present": true,
     "modal_present": true,
-    "multiscale_switching_present": true
+    "multiscale_switching_present": true,
+    "dbscan_toggle_present": true,
+    "dbscan_layer_present": true
   },
   "file_sizes_mb": {
     "density_low": 6.877,
