@@ -1,0 +1,14 @@
+# Ignore generated frontend/build files
+webapp/dist/* linguist-vendored
+webapp/build/* linguist-vendored
+webapp/node_modules/* linguist-vendored
+
+# Ignore static generated HTML
+*.html linguist-generated
+
+# Ignore minified assets
+*.min.js linguist-generated
+*.min.css linguist-generated
+
+# Ignore package lock files
+package-lock.json linguist-generated

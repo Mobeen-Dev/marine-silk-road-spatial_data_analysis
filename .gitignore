@@ -5,6 +5,8 @@ venv
 *.png
 *.jpg
 *.pdf
+*.pyc
+__pycache__
 
 analysis_outputs/*.csv
 webapp/data/
