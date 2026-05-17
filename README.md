@@ -30,6 +30,7 @@ Important scripts
 - `webapp/build_webapp_data.py` — transforms analysis outputs into final `webapp/data/` payloads used by the frontend.
 - `spatial_phase1_esda.py` — Phase 1 ESDA outputs (surface classification, summary statistics, country choropleth-ready outputs).
 - `spatial_phase2_ppa.py` — Phase 2 point pattern analysis and DBSCAN cluster export (`webapp/data/clusters.geojson`).
+- `spatial_highway_routes.py` — extracts maritime highway routes from density surfaces using a global-stratified hub routing algorithm, handles high-density blobs, and writes reference corridors (`webapp/data/highways.geojson`, `webapp/data/highway_blobs.geojson`).
 - `spatial_phase3_autocorrelation.py` — Phase 3 Moran's I / LISA analysis and engineered feature generation.
 - `spatial_phase4_regression.py` — Phase 4 OLS vs spatial lag regression comparison.
 - `run_analysis.py` / `run_analysis.sh` — end-to-end reproducible phase runner.
@@ -108,6 +109,7 @@ Implemented
 - Hierarchical controls panel with top-level dataset toggles and a Category Explorer modal for aggregated sources.
 - Toggleable heatmap, clustered hotspots, and point layers.
 - Toggleable Phase 2 DBSCAN hotspot-cluster layer (`webapp/data/clusters.geojson`).
+- Toggleable maritime highway route layer + high-density blob layer with per-blob reference route metadata.
 - Fit-world button (centers/zooms to show entire globe in one frame) and a fadeable control panel.
 
 Known limitations
@@ -126,11 +128,14 @@ Recommended reproducible steps
 2. Run `data_analysis_chunked.py` to produce coverage and p99/p95 statistics (saved to `analysis_outputs/`).
 3. Run `run_analysis.py` to execute export/build + Phase 1-4 analytical workflow.
 4. Review key outputs:
-   - `analysis_outputs/esda_report.ipynb`
-   - `analysis_outputs/phase2_ppa_metrics.json`
-   - `analysis_outputs/autocorrelation.ipynb`
-   - `analysis_outputs/spatial_regression.ipynb`
-   - `webapp/data/clusters.geojson`
+    - `analysis_outputs/esda_report.ipynb`
+    - `analysis_outputs/phase2_ppa_metrics.json`
+    - `analysis_outputs/highway_summary.json`
+    - `analysis_outputs/autocorrelation.ipynb`
+    - `analysis_outputs/spatial_regression.ipynb`
+    - `webapp/data/clusters.geojson`
+    - `webapp/data/highways.geojson`
+    - `webapp/data/highway_blobs.geojson`
 
 Note: `spatial_phase1_esda.py` downloads `analysis_outputs/reference_countries.geojson` from a public source if it is not already present, so internet access is required on first run.
 
