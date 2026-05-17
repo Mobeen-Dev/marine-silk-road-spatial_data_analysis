@@ -14,16 +14,27 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def iter_lon_lat_pairs(coords):
+    if not isinstance(coords, list):
+        return
+    if len(coords) >= 2 and isinstance(coords[0], (int, float)) and isinstance(coords[1], (int, float)):
+        yield float(coords[0]), float(coords[1])
+        return
+    for part in coords:
+        yield from iter_lon_lat_pairs(part)
+
+
 def feature_range_checks(fc: dict) -> dict:
     features = fc.get("features", [])
     invalid_lat = 0
     invalid_lon = 0
     for feat in features:
-        lon, lat = feat["geometry"]["coordinates"]
-        if lat < -90 or lat > 90:
-            invalid_lat += 1
-        if lon < -180 or lon >= 180:
-            invalid_lon += 1
+        coords = feat.get("geometry", {}).get("coordinates")
+        for lon, lat in iter_lon_lat_pairs(coords):
+            if lat < -90 or lat > 90:
+                invalid_lat += 1
+            if lon < -180 or lon >= 180:
+                invalid_lon += 1
     return {"feature_count": len(features), "invalid_lat": invalid_lat, "invalid_lon": invalid_lon}
 
 
@@ -39,6 +50,8 @@ def main() -> None:
         DATA / "hotspots_oil_gas.geojson",
         DATA / "hotspots_passenger.geojson",
         DATA / "clusters.geojson",
+        DATA / "highways.geojson",
+        DATA / "highway_blobs.geojson",
         DATA / "filter_index.json",
         DATA / "metadata.json",
     ]
@@ -51,6 +64,8 @@ def main() -> None:
     hs_oil_gas = load_json(DATA / "hotspots_oil_gas.geojson")
     hs_passenger = load_json(DATA / "hotspots_passenger.geojson")
     clusters = load_json(DATA / "clusters.geojson")
+    highways = load_json(DATA / "highways.geojson")
+    highway_blobs = load_json(DATA / "highway_blobs.geojson")
     filter_index = load_json(DATA / "filter_index.json")
     metadata = load_json(DATA / "metadata.json")
 
@@ -67,6 +82,8 @@ def main() -> None:
         "multiscale_switching_present": "getResolutionFromZoom" in app_js,
         "dbscan_toggle_present": "toggleDbscanClusters" in app_js and "toggleDbscanClusters" in index_html,
         "dbscan_layer_present": "dbscan-clusters" in app_js and "dbscan-clusters-src" in app_js,
+        "highway_toggles_present": "toggleHighways" in app_js and "toggleHighwayBlobs" in app_js,
+        "highway_layers_present": "highway-routes" in app_js and "highway-blobs-fill" in app_js,
     }
 
     top_category_values = set()
@@ -84,6 +101,8 @@ def main() -> None:
             "hotspots_oil_gas": feature_range_checks(hs_oil_gas),
             "hotspots_passenger": feature_range_checks(hs_passenger),
             "clusters": feature_range_checks(clusters),
+            "highways": feature_range_checks(highways),
+            "highway_blobs": feature_range_checks(highway_blobs),
         },
         "top_category_values_sample": sorted(v for v in top_category_values if v is not None),
         "filter_index_summary": {

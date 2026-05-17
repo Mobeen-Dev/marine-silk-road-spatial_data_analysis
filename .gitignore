@@ -10,6 +10,8 @@ __pycache__
 
 analysis_outputs/*.csv
 webapp/data/
+analysis_outputs/*.json
+analysis_outputs/*.geojson
 analysis_outputs/autocorrelation.ipynb
 analysis_outputs/esda_report.ipynb
 analysis_outputs/phase1_country_choropleth.geojson

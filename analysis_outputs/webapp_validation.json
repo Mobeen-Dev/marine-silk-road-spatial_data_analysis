@@ -10,6 +10,8 @@
     "webapp\\data\\hotspots_oil_gas.geojson": true,
     "webapp\\data\\hotspots_passenger.geojson": true,
     "webapp\\data\\clusters.geojson": true,
+    "webapp\\data\\highways.geojson": true,
+    "webapp\\data\\highway_blobs.geojson": true,
     "webapp\\data\\filter_index.json": true,
     "webapp\\data\\metadata.json": true
   },
@@ -46,6 +48,16 @@
     },
     "clusters": {
       "feature_count": 2415,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "highways": {
+      "feature_count": 81,
+      "invalid_lat": 0,
+      "invalid_lon": 0
+    },
+    "highway_blobs": {
+      "feature_count": 48,
       "invalid_lat": 0,
       "invalid_lon": 0
     }
@@ -112,6 +124,8 @@
       "passenger": 506
     },
     "dbscan_cluster_feature_count": 2415,
+    "highway_route_feature_count": 81,
+    "highway_blob_feature_count": 48,
     "top_categories": [
       "global",
       "commercial",
@@ -128,7 +142,9 @@
     "modal_present": true,
     "multiscale_switching_present": true,
     "dbscan_toggle_present": true,
-    "dbscan_layer_present": true
+    "dbscan_layer_present": true,
+    "highway_toggles_present": true,
+    "highway_layers_present": true
   },
   "file_sizes_mb": {
     "density_low": 6.877,

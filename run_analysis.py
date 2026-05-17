@@ -22,6 +22,7 @@ def main() -> None:
         ("Build webapp data", [py, "webapp\\build_webapp_data.py"]),
         ("Phase 1 ESDA", [py, "spatial_phase1_esda.py"]),
         ("Phase 2 PPA", [py, "spatial_phase2_ppa.py"]),
+        ("Highway extraction", [py, "spatial_highway_routes.py"]),
         ("Phase 3 autocorrelation", [py, "spatial_phase3_autocorrelation.py"]),
         ("Phase 4 regression", [py, "spatial_phase4_regression.py"]),
         ("Validate webapp", [py, "validate_webapp.py"]),

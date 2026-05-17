@@ -8,6 +8,7 @@ cd "$ROOT_DIR"
 .venv/Scripts/python.exe webapp/build_webapp_data.py
 .venv/Scripts/python.exe spatial_phase1_esda.py
 .venv/Scripts/python.exe spatial_phase2_ppa.py
+.venv/Scripts/python.exe spatial_highway_routes.py
 .venv/Scripts/python.exe spatial_phase3_autocorrelation.py
 .venv/Scripts/python.exe spatial_phase4_regression.py
 .venv/Scripts/python.exe validate_webapp.py
