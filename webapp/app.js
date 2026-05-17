@@ -20,6 +20,8 @@ const DATA_PATHS = {
   hotspotsOilGas: "./data/hotspots_oil_gas.geojson",
   hotspotsPassenger: "./data/hotspots_passenger.geojson",
   dbscanClusters: "./data/clusters.geojson",
+  highways: "./data/highways.geojson",
+  highwayBlobs: "./data/highway_blobs.geojson",
   filterIndex: "./data/filter_index.json",
   metadata: "./data/metadata.json"
 };
@@ -44,6 +46,8 @@ const state = {
   datasets: { low: null, mid: null, high: null },
   hotspotDatasets: { commercial: null, oil_gas: null, passenger: null },
   dbscanClusters: null,
+  highways: null,
+  highwayBlobs: null,
   filterIndex: null,
   metadata: null,
   currentResolution: null,
@@ -75,6 +79,8 @@ const ui = {
   toggleClusters: document.getElementById("toggleClusters"),
   togglePoints: document.getElementById("togglePoints"),
   toggleDbscanClusters: document.getElementById("toggleDbscanClusters"),
+  toggleHighways: document.getElementById("toggleHighways"),
+  toggleHighwayBlobs: document.getElementById("toggleHighwayBlobs"),
   fitWorldBtn: document.getElementById("fitWorldBtn"),
   modalBackdrop: document.getElementById("refineModalBackdrop"),
   modal: document.getElementById("refineModal"),
@@ -230,6 +236,30 @@ function applyDbscanVisibility() {
   );
 }
 
+function applyHighwayVisibility() {
+  if (!map.getLayer("highway-routes")) return;
+  map.setLayoutProperty(
+    "highway-routes",
+    "visibility",
+    ui.toggleHighways.checked ? "visible" : "none"
+  );
+  map.setLayoutProperty(
+    "highway-routes-casing",
+    "visibility",
+    ui.toggleHighways.checked ? "visible" : "none"
+  );
+  map.setLayoutProperty(
+    "highway-blobs-fill",
+    "visibility",
+    ui.toggleHighwayBlobs.checked ? "visible" : "none"
+  );
+  map.setLayoutProperty(
+    "highway-blobs-outline",
+    "visibility",
+    ui.toggleHighwayBlobs.checked ? "visible" : "none"
+  );
+}
+
 function updateCategorySummary(category) {
   const summaryNode = document.getElementById(`summary-${category}`);
   if (!summaryNode) return;
@@ -251,6 +281,7 @@ function applyAllFilters() {
   applyDensityFilters();
   applyHotspotFilters();
   applyDbscanVisibility();
+  applyHighwayVisibility();
   TOP_KEYS.forEach(updateCategorySummary);
 }
 
@@ -456,6 +487,8 @@ function wireRenderingToggles() {
   ui.toggleClusters.addEventListener("change", applyHotspotFilters);
   ui.togglePoints.addEventListener("change", applyHotspotFilters);
   ui.toggleDbscanClusters.addEventListener("change", applyDbscanVisibility);
+  ui.toggleHighways.addEventListener("change", applyHighwayVisibility);
+  ui.toggleHighwayBlobs.addEventListener("change", applyHighwayVisibility);
   ui.fitWorldBtn.addEventListener("click", () => {
     fitWorldInFrame(true);
     setStatus("Fitted whole world");
@@ -648,8 +681,109 @@ function addDbscanClusterLayer() {
   });
 }
 
+function addHighwayLayers() {
+  map.addSource("highway-routes-src", {
+    type: "geojson",
+    data: state.highways || { type: "FeatureCollection", features: [] }
+  });
+  map.addSource("highway-blobs-src", {
+    type: "geojson",
+    data: state.highwayBlobs || { type: "FeatureCollection", features: [] }
+  });
+
+  map.addLayer({
+    id: "highway-routes-casing",
+    type: "line",
+    source: "highway-routes-src",
+    paint: {
+      "line-color": "#0f172a",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 2, 1.4, 8, 5.4],
+      "line-opacity": 0.52
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.addLayer({
+    id: "highway-routes",
+    type: "line",
+    source: "highway-routes-src",
+    paint: {
+      "line-color": [
+        "interpolate",
+        ["linear"],
+        ["coalesce", ["to-number", ["get", "usage_score"]], 0],
+        1, "#38bdf8",
+        2, "#22c55e",
+        3, "#facc15",
+        4, "#fb923c",
+        5, "#ef4444"
+      ],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.9, 8, 3.8],
+      "line-opacity": 0.9
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.addLayer({
+    id: "highway-blobs-fill",
+    type: "fill",
+    source: "highway-blobs-src",
+    paint: {
+      "fill-color": [
+        "case",
+        ["coalesce", ["get", "multi_country"], false],
+        "#ef4444",
+        "#2563eb"
+      ],
+      "fill-opacity": 0.2
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.addLayer({
+    id: "highway-blobs-outline",
+    type: "line",
+    source: "highway-blobs-src",
+    paint: {
+      "line-color": [
+        "case",
+        ["coalesce", ["get", "multi_country"], false],
+        "#b91c1c",
+        "#1d4ed8"
+      ],
+      "line-width": 1.1,
+      "line-opacity": 0.8
+    },
+    layout: { visibility: "none" }
+  });
+
+  map.on("click", "highway-routes", (e) => {
+    const feature = e.features?.[0];
+    if (!feature) return;
+    const p = feature.properties || {};
+    const html =
+      `<b>Highway route:</b> ${p.route_id || "-"}<br>` +
+      `<b>Usage score:</b> ${Number(p.usage_score || 0).toFixed(2)}<br>` +
+      `<b>Length (km):</b> ${Number(p.length_km || 0).toLocaleString()}`;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+  });
+
+  map.on("click", "highway-blobs-fill", (e) => {
+    const feature = e.features?.[0];
+    if (!feature) return;
+    const p = feature.properties || {};
+    const countries = String(p.countries || "").replaceAll(",", ", ");
+    const html =
+      `<b>Blob:</b> ${p.blob_id || "-"}<br>` +
+      `<b>Countries:</b> ${countries || "n/a"}<br>` +
+      `<b>Reference route:</b> ${p.reference_route_id || "n/a"}<br>` +
+      `<b>Total intensity:</b> ${Number(p.total_intensity || 0).toLocaleString()}`;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+  });
+}
+
 async function initializeData() {
-  const [low, mid, high, hsCommercial, hsOilGas, hsPassenger, dbscanClusters, filterIndex, metadata] =
+  const [low, mid, high, hsCommercial, hsOilGas, hsPassenger, dbscanClusters, highways, highwayBlobs, filterIndex, metadata] =
     await Promise.all([
       loadJson(DATA_PATHS.low),
       loadJson(DATA_PATHS.mid),
@@ -658,6 +792,8 @@ async function initializeData() {
       loadJson(DATA_PATHS.hotspotsOilGas),
       loadJson(DATA_PATHS.hotspotsPassenger),
       loadJson(DATA_PATHS.dbscanClusters, true),
+      loadJson(DATA_PATHS.highways, true),
+      loadJson(DATA_PATHS.highwayBlobs, true),
       loadJson(DATA_PATHS.filterIndex),
       loadJson(DATA_PATHS.metadata)
     ]);
@@ -669,6 +805,8 @@ async function initializeData() {
   state.hotspotDatasets.oil_gas = hsOilGas;
   state.hotspotDatasets.passenger = hsPassenger;
   state.dbscanClusters = dbscanClusters;
+  state.highways = highways;
+  state.highwayBlobs = highwayBlobs;
   state.filterIndex = filterIndex;
   state.metadata = metadata;
 
@@ -703,6 +841,7 @@ map.on("load", async () => {
     addDensityLayers();
     for (const category of HOTSPOT_KEYS) addHotspotLayersForCategory(category);
     addDbscanClusterLayer();
+    addHighwayLayers();
 
     wirePanelBehavior();
     wireModalBehavior();
