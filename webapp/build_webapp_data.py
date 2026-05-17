@@ -89,6 +89,8 @@ SUBCATEGORIES = {
 RESOLUTION_GRIDS = {"low": 1.0, "mid": 0.5, "high": 0.25}
 HOTSPOT_FILE = ANALYSIS_DIR / "traffic_combined_hotspots.csv"
 CLUSTERS_FILE = DATA_DIR / "clusters.geojson"
+HIGHWAYS_FILE = DATA_DIR / "highways.geojson"
+HIGHWAY_BLOBS_FILE = DATA_DIR / "highway_blobs.geojson"
 
 
 def wrap_longitude(series: pd.Series) -> pd.Series:
@@ -225,6 +227,14 @@ def main() -> None:
     if not CLUSTERS_FILE.exists():
         write_json(CLUSTERS_FILE, {"type": "FeatureCollection", "features": []})
     cluster_feature_count = len(json.loads(CLUSTERS_FILE.read_text(encoding="utf-8")).get("features", []))
+    if not HIGHWAYS_FILE.exists():
+        write_json(HIGHWAYS_FILE, {"type": "FeatureCollection", "features": []})
+    if not HIGHWAY_BLOBS_FILE.exists():
+        write_json(HIGHWAY_BLOBS_FILE, {"type": "FeatureCollection", "features": []})
+    highway_feature_count = len(json.loads(HIGHWAYS_FILE.read_text(encoding="utf-8")).get("features", []))
+    highway_blob_feature_count = len(
+        json.loads(HIGHWAY_BLOBS_FILE.read_text(encoding="utf-8")).get("features", [])
+    )
 
     filter_index = {
         "top_categories": [
@@ -273,6 +283,8 @@ def main() -> None:
         "density_feature_counts_by_resolution": feature_counts_by_res,
         "hotspot_feature_counts": hotspot_counts,
         "dbscan_cluster_feature_count": cluster_feature_count,
+        "highway_route_feature_count": highway_feature_count,
+        "highway_blob_feature_count": highway_blob_feature_count,
         "top_categories": list(DATASET_CLASSES.keys()),
     }
     (DATA_DIR / "metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
