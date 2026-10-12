@@ -175,8 +175,6 @@ Contributions are welcome. Open issues for bugs or feature requests. When propos
 
 ## Contact
 
-Repository maintainer: see repository owner. For urgent questions open an issue with the `diagnostics` label and include the `analysis_outputs/raster_statistics_chunked.json` excerpt when possible.
+Repository maintainer: Mobeen-Dev . For urgent questions open an issue with the `diagnostics` label and include the `analysis_outputs/raster_statistics_chunked.json` excerpt when possible.
 
 ---
-
-*This README is intended to be a concise operational guide. For the technical background, check `analysis_outputs/q1_brief.txt`, `analysis_outputs/q2_brief.txt`, and `analysis_outputs/q3_brief.txt`.*
